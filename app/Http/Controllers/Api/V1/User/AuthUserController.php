@@ -28,12 +28,13 @@ class AuthUserController extends Controller
             "username" => 'required|unique:users',
             "email" => 'required|unique:users',
             "password" => 'required|min:8',
+            "confirm_password" => 'required|same:password',
             "name" => 'required|string|min:3|max:255'
         ]);
 
         //Check If Not Exist Data.
         if ($valid->fails()) {
-            return response(["message" => "Bad Request Data (Field Is Required).", "validation_errors" => $valid->errors()], 400);
+            return response(["status" => 401, "message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()]);
         }
 
         //Request Data Resources.
@@ -52,7 +53,7 @@ class AuthUserController extends Controller
             $ss = User::where('id', $user->id)->first();
             return new UserResource($ss);
         } else {
-            return response(["status" => "Unauthorized Registration", "message" => "Data Error Register"], 401);
+            return response(["status" => "Unauthorized Registration", "message" => "Data Error Register"]);
         }
     }
 
@@ -61,12 +62,12 @@ class AuthUserController extends Controller
         //Cek Validation
         $validator = Validator::make($request->all(), [
             "email" => "required|email",
-            "password" => "required",
+            "password" => "required|min:8",
         ]);
 
         //Check If Not Exist Data.
         if ($validator->fails()) {
-            return response(["status" => "Unauthorized Login", "message" => "Data Not Match!."], 401);
+            return response(["message" => "Unauthorized Data.", "validation_errors" => $validator->errors()], 401);
         }
 
         //Filter By Email.
@@ -76,7 +77,7 @@ class AuthUserController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return new LoginResource($user);
         } else {
-            return response(["status" => "Not Found Data"], 404);
+            return response(["message" => "Unauthorized Data."], 401);
         }
     }
 

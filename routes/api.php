@@ -26,13 +26,12 @@ Route::prefix('v1')->group(function () {
 
     Route::post("register", [AuthUserController::class, 'registration']);
     Route::post("login", [AuthUserController::class, 'login']);
+    Route::post("forgotpass", [UserPassword::class, 'login']);
 
     // sanctum auth middleware routes
     Route::middleware('auth:api')->group(function () {
         Route::get("user/{id}", [UserController::class, 'show']);
-
         Route::get("logout", [AuthUserController::class, 'logout']);
-
         Route::post("changepass", [UserPassword::class, 'changePassword']);
     });
 });
