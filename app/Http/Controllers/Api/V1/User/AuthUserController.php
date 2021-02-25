@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\API\V1\Exception\QrRegisterException;
 use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
+use App\Http\Resources\API\V1\User\QrRegistrationResource;
 use App\Http\Resources\API\V1\User\UserResource;
+use App\Models\Licence;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,7 +26,7 @@ class AuthUserController extends Controller
      */
     public function registration(Request $request)
     {
-        //Validation
+        //Validation.
         $valid = Validator::make($request->all(), [
             "username" => 'required|unique:users',
             "email" => 'required|unique:users',
@@ -32,9 +35,12 @@ class AuthUserController extends Controller
             "name" => 'required|string|min:3|max:255'
         ]);
 
-        //Check If Not Exist Data.
+        //Check Validation.
         if ($valid->fails()) {
-            return response(["message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()], 401);
+            //Convert Array Data On Problems(), Not Object To Array.
+            return response(['status' => false, 'problems' => collect($valid->errors()->getMessages())->map(function ($item) {
+                return join(',', $item);
+            })->flatten()]);
         }
 
         //Request Data Resources.
@@ -65,9 +71,12 @@ class AuthUserController extends Controller
             "password" => "required|min:8",
         ]);
 
-        //Check If Not Exist Data.
+        //Check Validation.
         if ($validator->fails()) {
-            return response(["message" => "Unauthorized Data.", "validation_errors" => $validator->errors()], 401);
+            //Convert Array Data On Problems(), Not Object To Array.
+            return response(['status' => false, 'problems' => collect($valid->errors()->getMessages())->map(function ($item) {
+                return join(',', $item);
+            })->flatten()]);
         }
 
         //Filter By Email.
@@ -91,7 +100,7 @@ class AuthUserController extends Controller
             $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
             return new LogoutResource($this);
         } else {
-            return response(["status" => "NOT LOGOUT"], 401);
+            return response(["status" => false, "message" => "Not Logout"]);
         }
     }
 
@@ -107,28 +116,34 @@ class AuthUserController extends Controller
             "qrcode" => 'required'
         ]);
 
-        //Check If Not Exist Data.
+        //Check Validation.
         if ($valid->fails()) {
-            return response(["message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()], 401);
+            //Convert Array Data On Problems(), Not Object To Array.
+            return response(['status' => false, 'problems' => collect($valid->errors()->getMessages())->map(function ($item) {
+                return join(',', $item);
+            })->flatten()]);
         }
 
         //Request Data Resources.
         $data = $request->all();
         $data['password'] = Hash::make($request->password);
 
-        //Save Data.
-        $user = User::create($data);
-        Profile::create([
-            'user_id' => $user->id,
-            'name' => $data['name']
-        ]);
+        //Licence
+        $Licence = Licence::where('licence', $request->qrcode)->first();
+        if (!$Licence->user_id) {
+            //Save Data.
+            $user = User::create($data);
+            Profile::create([
+                'user_id' => $user->id,
+                'name' => $data['name']
+            ]);
+            $key = Licence::find($Licence->id);
+            $key->user_id = $user->id;
+            $key->save();
 
-        //If Exist Data Resource
-        if (!is_null($user)) {
-            $ss = User::where('id', $user->id)->first();
-            return new UserResource($ss);
+            return new QrRegistrationResource($user);
         } else {
-            return response(["status" => "Unauthorized Registration", "message" => "Data Error Register"]);
+            return new QrRegisterException($this);
         }
     }
 }
