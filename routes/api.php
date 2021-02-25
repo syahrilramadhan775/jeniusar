@@ -25,8 +25,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 
     Route::post("register", [AuthUserController::class, 'registration']);
+    Route::post("register", [AuthUserController::class, 'qrRegistration']);
     Route::post("login", [AuthUserController::class, 'login']);
-    Route::post("forgotpass", [UserPassword::class, 'login']);
 
     // sanctum auth middleware routes
     Route::middleware('auth:api')->group(function () {

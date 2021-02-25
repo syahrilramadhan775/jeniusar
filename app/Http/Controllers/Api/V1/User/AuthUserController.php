@@ -34,7 +34,7 @@ class AuthUserController extends Controller
 
         //Check If Not Exist Data.
         if ($valid->fails()) {
-            return response(["status" => 401, "message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()]);
+            return response(["message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()], 401);
         }
 
         //Request Data Resources.
@@ -92,6 +92,43 @@ class AuthUserController extends Controller
             return new LogoutResource($this);
         } else {
             return response(["status" => "NOT LOGOUT"], 401);
+        }
+    }
+
+    public function qrRegistration(Request $request)
+    {
+        //Validation
+        $valid = Validator::make($request->all(), [
+            "username" => 'required|unique:users',
+            "email" => 'required|unique:users',
+            "password" => 'required|min:8',
+            "confirm_password" => 'required|same:password',
+            "name" => 'required',
+            "qrcode" => 'required'
+        ]);
+
+        //Check If Not Exist Data.
+        if ($valid->fails()) {
+            return response(["message" => "Unauthorized Data (Field Is Required).", "validation_errors" => $valid->errors()], 401);
+        }
+
+        //Request Data Resources.
+        $data = $request->all();
+        $data['password'] = Hash::make($request->password);
+
+        //Save Data.
+        $user = User::create($data);
+        Profile::create([
+            'user_id' => $user->id,
+            'name' => $data['name']
+        ]);
+
+        //If Exist Data Resource
+        if (!is_null($user)) {
+            $ss = User::where('id', $user->id)->first();
+            return new UserResource($ss);
+        } else {
+            return response(["status" => "Unauthorized Registration", "message" => "Data Error Register"]);
         }
     }
 }
