@@ -29,14 +29,13 @@ class Jeniusar extends Migration
         Schema::create('licence', function (Blueprint $table) {
             $table->id();
             $table->string('licence');
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
         });
     }
 

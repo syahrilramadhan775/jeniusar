@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Licence;
+use Dotenv\Parser\Value;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class VerficationCodeCRUD extends Controller
 {
@@ -14,7 +18,9 @@ class VerficationCodeCRUD extends Controller
      */
     public function index()
     {
-        return Inertia::render('Users/Show');
+        $data = Licence::with('users');
+
+        return Inertia::render('License/Show', ['licenses' => $data->get()]);
     }
 
     /**
@@ -24,7 +30,7 @@ class VerficationCodeCRUD extends Controller
      */
     public function create()
     {
-        return Inertia::render('Users/Create');
+        return Inertia::render('License/Create');
     }
 
     /**
@@ -35,7 +41,24 @@ class VerficationCodeCRUD extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $hasAuto = !$request->manual;
+
+        // Give Form Validation If The Mode Is Auto
+        if ($request->manual)
+            Validator::make($request->all(), ['licence' => 'required|min:12|max:12|unique:licence'])
+                ->validate();
+
+        $record = [
+            'licence' => $request->licence,
+            'user_id' => null,
+        ];
+        // jika kode tidak dibuat manual
+        if ($hasAuto)
+            $record['licence'] = $this->generateCode();
+
+        $license = Licence::create($record);
+        // return Inertia::render('License/Create', ['data' => $license]);
+        return redirect()->route('license.index');
     }
 
     /**
@@ -80,6 +103,28 @@ class VerficationCodeCRUD extends Controller
      */
     public function destroy($id)
     {
-        //
+        // delete 
+        Licence::destroy($id);
+
+        return redirect()->route('license.index');
+    }
+
+    private function generateCode($batch = 1, $round = 3)
+    {
+        // One Batch
+        if ($batch <= 1) {
+            $randomCode = Str::lower(Str::random(4 * $round));
+
+            // Recursive Until Unique
+            return $this->checkUnique($randomCode)
+                ? $randomCode
+                : $this->generateCode();
+        }
+        // Many Batch
+
+    }
+    private function checkUnique($code)
+    {
+        return !(Licence::where('licence', $code)->exists());
     }
 }

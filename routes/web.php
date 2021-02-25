@@ -30,5 +30,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::resource('client', 'VerficationCodeCRUD');
+    Route::resource('license', 'VerficationCodeCRUD');
 });
