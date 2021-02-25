@@ -16,7 +16,7 @@ class Licence extends Model
     */
 
     protected $table = "licence";
-    protected $fillable = ['licence', 'user_id'];
+    protected $fillable = ['id', 'licence', 'user_id'];
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +34,11 @@ class Licence extends Model
     | SCOPES
     |--------------------------------------------------------------------------
     */
+
+    public function qrcode($qrcode)
+    {
+        $this->where('licence', $qrcode);
+    }
 
     /*
     |--------------------------------------------------------------------------

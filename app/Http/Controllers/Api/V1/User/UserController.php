@@ -42,12 +42,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        if (!is_null($user)) {
-            return new ProfileResource($user);
-        } else {
-            return response()->json(["status" => "failed", "message" => "Whoops! no user found"]);
-        }
+        User::find($id);
+        // if (!is_null($user)) {
+        //     return new ProfileResource($user);
+        // } else {
+        //     return response()->json(["status" => "failed", "message" => "Whoops! no user found"]);
+        // }
+        $user = Auth::user();
+        return $user->tokens()->get();
     }
 
     /**
