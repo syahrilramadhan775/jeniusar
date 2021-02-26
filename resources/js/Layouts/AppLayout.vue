@@ -34,6 +34,13 @@
                                 >
                                     Serial Code
                                 </jet-nav-link>
+
+                                <jet-nav-link
+                                    :href="route('client.index')"
+                                    :active="route().current('client.index')"
+                                >
+                                    User
+                                </jet-nav-link>
                             </div>
                         </div>
 
@@ -320,6 +327,13 @@
                             :active="route().current('license.index')"
                         >
                             Serial Code
+                        </jet-responsive-nav-link>
+
+                        <jet-responsive-nav-link
+                            :href="route('client.index')"
+                            :active="route().current('client.index')"
+                        >
+                            User
                         </jet-responsive-nav-link>
                     </div>
 

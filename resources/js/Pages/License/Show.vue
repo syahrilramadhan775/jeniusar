@@ -64,8 +64,13 @@
                                     <div class="font-semibold text-lg">
                                         {{ convertToFormat(license.licence) }}
                                     </div>
-                                    <span class="text-gray-400"
-                                        >Udin Hulala Hula
+                                    <span
+                                        class="text-gray-400"
+                                        v-if="license.users"
+                                        >{{ license.users.profile.name }}
+                                    </span>
+                                    <span class="text-green-700" v-else>
+                                        Available
                                     </span>
                                 </div>
                             </div>

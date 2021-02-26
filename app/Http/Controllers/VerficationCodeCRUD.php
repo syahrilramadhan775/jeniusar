@@ -43,18 +43,21 @@ class VerficationCodeCRUD extends Controller
     {
         $hasAuto = !$request->manual;
 
+
         // Give Form Validation If The Mode Is Auto
         if ($request->manual)
             Validator::make($request->all(), ['licence' => 'required|min:12|max:12|unique:licence'])
                 ->validate();
 
         $record = [
-            'licence' => $request->licence,
+            'licence' => Str::lower($request->licence),
             'user_id' => null,
         ];
         // jika kode tidak dibuat manual
         if ($hasAuto)
             $record['licence'] = $this->generateCode();
+
+
 
         $license = Licence::create($record);
         // return Inertia::render('License/Create', ['data' => $license]);

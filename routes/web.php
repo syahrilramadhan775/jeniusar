@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\PasswordResetLinkController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,4 +32,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::resource('license', 'VerficationCodeCRUD');
+    Route::resource('client', 'UsersCRUD');
 });
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
