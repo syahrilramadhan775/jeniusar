@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Serial Code <span class="text-gray-300">- Show</span>
+                User <span class="text-gray-300">- Show</span>
             </h2>
         </template>
 
@@ -58,33 +58,33 @@
                                 <tr>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 semi uppercase tracking-wider"
+                                    >
+                                        Name
+                                    </th>
+
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 semi uppercase tracking-wider"
+                                    >
+                                        Email
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 semi uppercase tracking-wider"
                                     >
                                         Username
                                     </th>
 
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Email
-                                    </th>
-
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Name
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 semi uppercase tracking-wider"
                                     >
                                         Active At
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 semi uppercase tracking-wider"
                                     >
                                         Verification Code
                                     </th>
@@ -94,12 +94,15 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
+                                <tr
+                                    v-for="(u, index) in user"
+                                    v-bind:key="index"
+                                >
                                     <!-- Username -->
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-gray-600"
+                                        class="px-6 py-4 whitespace-nowrap text-gray-600 text-sm font-semibold"
                                     >
-                                        Regional Paradigm Technician
+                                        {{ u.name }}
                                     </td>
                                     <!-- End Username Table -->
 
@@ -107,40 +110,33 @@
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-gray-600 text-sm"
                                     >
-                                        Regional Paradigm Technician
+                                        {{ u.email }}
                                     </td>
                                     <!-- End Username Table -->
 
                                     <!-- Name -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div>
-                                                <div
-                                                    class="text-sm font-medium text-gray-900"
-                                                >
-                                                    Jane Cooper
-                                                </div>
-                                                <div
-                                                    class="text-sm text-gray-500"
-                                                >
-                                                    jane.cooper@example.com
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-gray-600 text-sm"
+                                    >
+                                        {{ u.username }}
                                     </td>
                                     <!-- End Name Table -->
 
-                                    <!-- Name -->
+                                    <!-- Today -->
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-gray-600 text-sm"
                                     >
-                                        Today
+                                        {{ u.created_at }}
                                     </td>
+                                    <!--  -->
+
+                                    <!-- verification code -->
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                        class="px-6 py-4 whitespace-nowrap text-gray-600 text-sm"
                                     >
-                                        2CUT RRCO AZRJ
+                                        {{ convertToFormat(u.license) }}
                                     </td>
+                                    <!--  -->
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
                                     >
@@ -197,7 +193,7 @@ export default {
     },
 
     props: {
-        licenses: Array,
+        user: Array,
     },
 
     data() {
