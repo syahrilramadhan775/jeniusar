@@ -30,7 +30,6 @@ class UsersCRUD extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -41,7 +40,6 @@ class UsersCRUD extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -63,7 +61,11 @@ class UsersCRUD extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+
+        return Inertia::render('User/Update', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -76,6 +78,26 @@ class UsersCRUD extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $user = User::find($id);
+        $rules = [
+            'username' => 'string|required|min:9',
+            'name' => 'string|required|min:9',
+        ];
+
+        // if form is filled
+        if ($user->username != $request->username)
+            $rules['username'] = 'unique:users';
+        if ($user->name != $request->name)
+            $rules['name'] = 'unique:users';
+
+        $request->validate($rules);
+
+        //  Update User
+        $user->update([
+            'username' => $request->username,
+            'name' => $request->name,
+        ]);
     }
 
     /**
@@ -86,6 +108,5 @@ class UsersCRUD extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 }
