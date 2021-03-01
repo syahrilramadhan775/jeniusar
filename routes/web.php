@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\PasswordResetLinkController;
+use App\Http\Controllers\Fortify\LoginController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,13 +26,17 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['static.authenticate'])->group(function () {
+
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
     Route::resource('license', 'VerficationCodeCRUD');
     Route::resource('client', 'UsersCRUD');
 });
+
+// Overwrite Laravel Forify Authenticate
 Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+Route::post('login', [LoginController::class, 'authenticate']);
+Route::get('login', [LoginController::class, 'create'])->name('login');
+Route::post('register', [LoginController::class, 'register']);

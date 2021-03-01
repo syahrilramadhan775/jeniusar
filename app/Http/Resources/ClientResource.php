@@ -14,13 +14,15 @@ class ClientResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'email' => $this->email,
             'username' => $this->username,
             'name' =>  $this->profile->name,
-            'license' => $this->licence->licence,
+            'license' => $this->licence ? $this->licence->licence : '<span class="text-red-400">Unlicenced</span>',
             // '' =>
-            'created_at' => $this->created_at->diffForHumans()
+            'created_at' => $this->licence ? $this->licence->updated_at->diffForHumans()
+                :  $this->created_at->diffForHumans(),
         ];
     }
 }
