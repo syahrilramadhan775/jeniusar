@@ -192,14 +192,7 @@
                                             "
                                             class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out"
                                         >
-                                            <img
-                                                class="h-8 w-8 rounded-full object-cover"
-                                                :src="
-                                                    $page.props.user
-                                                        .profile_photo_url
-                                                "
-                                                :alt="$page.props.user.name"
-                                            />
+                                            Falah
                                         </button>
 
                                         <span
@@ -210,7 +203,11 @@
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {{ $page.props.user.name }}
+                                                {{
+                                                    $page.props.user
+                                                        ? $page.props.user.name
+                                                        : "Falah"
+                                                }}
 
                                                 <svg
                                                     class="ml-2 -mr-0.5 h-4 w-4"
@@ -345,22 +342,24 @@
                                     $page.props.jetstream.managesProfilePhotos
                                 "
                                 class="flex-shrink-0 mr-3"
-                            >
-                                <img
-                                    class="h-10 w-10 rounded-full object-cover"
-                                    :src="$page.props.user.profile_photo_url"
-                                    :alt="$page.props.user.name"
-                                />
-                            </div>
+                            ></div>
 
                             <div>
                                 <div
                                     class="font-medium text-base text-gray-800"
                                 >
-                                    {{ $page.props.user.name }}
+                                    {{
+                                        $page.props.user
+                                            ? $page.props.user.name
+                                            : "Falah"
+                                    }}
                                 </div>
                                 <div class="font-medium text-sm text-gray-500">
-                                    {{ $page.props.user.email }}
+                                    {{
+                                        $page.props.user
+                                            ? $page.props.user.name
+                                            : "Falah"
+                                    }}
                                 </div>
                             </div>
                         </div>

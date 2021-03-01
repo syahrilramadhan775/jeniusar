@@ -59,7 +59,26 @@
                             :key="index"
                             :class="{ hidden: hasHidden[index] }"
                         >
-                            <div class="flex">
+                            <div class="flex items-center">
+                                <button
+                                    class="mr-2 hover:bg-gray-300 p-2 rounded-full transition-colors focus:bg-gray-400 outline-none border-none"
+                                    @click="selectItem(license.licence)"
+                                >
+                                    <svg
+                                        class="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                                        ></path>
+                                    </svg>
+                                </button>
                                 <div class="flex flex-col">
                                     <div class="font-semibold text-lg">
                                         {{ convertToFormat(license.licence) }}
@@ -74,16 +93,25 @@
                                     </span>
                                 </div>
                             </div>
-
-                            <div class="hidden md:block">
-                                <el-button
-                                    color="red"
-                                    class="ml-3"
-                                    v-on:click="deleteCode(license.id)"
+                            <button
+                                class="mr-2 hover:bg-gray-300 p-2 rounded-full transition-colors focus:bg-gray-400 outline-none border-none"
+                                v-on:click="deleteCode(license.id)"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-red-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    Delete
-                                </el-button>
-                            </div>
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    ></path>
+                                </svg>
+                            </button>
 
                             <div class="block md:hidden"></div>
                         </div>
@@ -91,6 +119,85 @@
                     </div>
                 </div>
             </div>
+
+            <jet-dialog-modal :show="modalShow" @close="OnCloseModal">
+                <template #title> Serial Code </template>
+
+                <template #content>
+                    <div class="md:grid grid-flow-col gap-3">
+                        <div class="col-span-9">
+                            <qrcode-vue
+                                :value="selectedItem"
+                                size="250"
+                                class="w-full"
+                            />
+                        </div>
+                        <div class="mt-4 col-span-5 flex flex-col">
+                            <div>
+                                <jet-label value="Resolution" />
+                                <jet-input
+                                    type="text"
+                                    class="mt-1 block w-25"
+                                    placeholder="resolution"
+                                    ref="text"
+                                    v-model="resolution"
+                                />
+                            </div>
+
+                            <!-- <jet-label value="Type" class="mt-3 mb-2" />
+                            <jet-dropdown align="left" width="48">
+                                <template #trigger>
+                                    <el-button>
+                                        {{
+                                            selectedType === "canvas"
+                                                ? "JPEG"
+                                                : "SVG"
+                                        }}
+                                    </el-button>
+                                </template>
+
+                                <template #content>
+                                    <div
+                                        class="block px-4 py-2 text-xs text-gray-400"
+                                    >
+                                        Choose Type
+                                    </div>
+
+                                    <jet-dropdown-link
+                                        as="button"
+                                        @click="selectedType = 'canvas'"
+                                    >
+                                        JPEG
+                                    </jet-dropdown-link>
+
+                                    <jet-dropdown-link
+                                        as="button"
+                                        @click="selectedType = 'svg'"
+                                    >
+                                        SVG
+                                    </jet-dropdown-link>
+                                </template>
+                            </jet-dropdown> -->
+                        </div>
+                    </div>
+
+                    <!-- Hidden Layer -->
+                    <div class="hidden">
+                        <qrcode-vue
+                            :value="selectedItem"
+                            :size="resolution"
+                            :type="selectedType"
+                            ref="hidden-canvas"
+                        />
+                    </div>
+                </template>
+
+                <template #footer>
+                    <jet-button @click.native="downloadCanvas">
+                        Download
+                    </jet-button>
+                </template>
+            </jet-dialog-modal>
         </div>
     </app-layout>
 </template>
@@ -107,6 +214,10 @@ import JetDangerButton from "@/Jetstream/DangerButton";
 import AppLayout from "@/Layouts/AppLayout";
 import LinkButton from "@/Components/LinkButton";
 import ElButton from "@/Components/Button";
+import QrcodeVue from "qrcode.vue";
+import JetDialogModal from "@/Jetstream/DialogModal";
+import JetDropdown from "@/Jetstream/Dropdown";
+import JetDropdownLink from "@/Jetstream/DropdownLink";
 
 export default {
     components: {
@@ -121,6 +232,10 @@ export default {
         AppLayout,
         LinkButton,
         ElButton,
+        QrcodeVue,
+        JetDialogModal,
+        JetDropdown,
+        JetDropdownLink,
     },
 
     props: {
@@ -128,12 +243,21 @@ export default {
     },
 
     data() {
+        const DataCanvasItem = {
+            selectedItem: "empty",
+            // selectedType: "canvas",
+            resolution: 250,
+        };
+
         return {
             form: this.$inertia.form({
                 manually: false,
                 code: "",
             }),
             hasHidden: [], //hidden
+            modalShow: false,
+
+            ...DataCanvasItem,
         };
     },
 
@@ -146,6 +270,7 @@ export default {
                 },
             });
         },
+
         convertToFormat(code = "") {
             let rebuildString = "";
 
@@ -158,6 +283,7 @@ export default {
             }
             return rebuildString.toUpperCase();
         },
+
         searchCode(event) {
             let search = event.target.value
                 .replaceAll(" ", "")
@@ -172,7 +298,32 @@ export default {
             //     this.$inertia.get(route("license.index") + "?search=" + search);
 
             // console.log({ keyCode, event });
-            console.log(this.hasHidden, this.licenses);
+        },
+        OnCloseModal() {
+            this.modalShow = false;
+        },
+
+        selectItem(code) {
+            this.selectedItem = code;
+
+            this.modalShow = true;
+        },
+
+        downloadCanvas() {
+            var canvas = this.$refs["hidden-canvas"].$el;
+            var selectedItem = this.selectedItem;
+
+            canvas.toBlob(function (blob) {
+                const anchor = document.createElement("a");
+                anchor.download = selectedItem;
+                anchor.href = URL.createObjectURL(blob);
+                //
+                anchor.click();
+
+                URL.revokeObjectURL(anchor.href);
+            }, "image/jpeg");
+
+            this.modalShow = false;
         },
     },
 };
