@@ -21,6 +21,7 @@ class DashboardController extends Controller
             'codeLeft' => $this->codeLeft(),
         ];
 
+
         return Inertia::render('Dashboard', [
             'widget' => $widget,
             'user' => $this->lastRegisteredUser(),

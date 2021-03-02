@@ -8,29 +8,22 @@
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between">
+                <div
+                    class="flex items-center md:justify-between justfiy-start flex-col md:flex-row"
+                >
                     <link-button
-                        :href="route('license.create')"
-                        class="mt-3 shadow-md"
+                        :href="route('client.create')"
+                        class="mt-3 shadow-md mr-auto"
                     >
                         add Users
                     </link-button>
 
                     <!-- Input Search -->
-                    <div class="mt-1 relative rounded-md shadow-sm">
-                        <!-- <div
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                        ></div> -->
-                        <input
-                            type="text"
-                            name="price"
-                            id="price"
-                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 py-2 sm:text-sm md:text-base bg-white border-transparent rounded-md"
-                            placeholder="Name"
-                            v-on:input="searchCode"
-                        />
+                    <div
+                        class="mt-1 relative rounded-md shadow-sm w-full md:w-max mt-5 md:mt-0"
+                    >
                         <div
-                            class="absolute inset-y-0 right-0 flex items-center pr-3 pl-2"
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                         >
                             <svg
                                 class="w-5 h-5 text-gray-500"
@@ -46,6 +39,32 @@
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                 ></path>
                             </svg>
+                        </div>
+                        <input
+                            type="text"
+                            :disabled="loading"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 pr-28 py-2 sm:text-sm md:text-base bg-white border-transparent rounded-md"
+                            :class="{ 'bg-gray-200': loading }"
+                            :placeholder="column"
+                            @input="search"
+                        />
+                        <div
+                            class="absolute inset-y-0 right-0 flex items-center pl-2"
+                        >
+                            <label for="currency" class="sr-only"
+                                >Currency</label
+                            >
+                            <select
+                                id="currency"
+                                name="currency"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
+                                v-model="column"
+                                @change="search()"
+                            >
+                                <option value="username">Username</option>
+                                <option value="email">Email</option>
+                                <option value="name">Name</option>
+                            </select>
                         </div>
                     </div>
                     <!-- End Input Search -->
@@ -95,7 +114,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
-                                    v-for="(u, index) in user"
+                                    v-for="(u, index) in showData"
                                     v-bind:key="index"
                                 >
                                     <!-- Username -->
@@ -140,14 +159,27 @@
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
                                     >
+                                        <inertia-link
+                                            :href="
+                                                loading
+                                                    ? '#'
+                                                    : route('client.edit', u.id)
+                                            "
+                                            :class="{
+                                                'text-indigo-300 hover:text-indigo-300': loading,
+                                                'text-indigo-600 hover:text-indigo-900': !loading,
+                                            }"
+                                            >Edit
+                                        </inertia-link>
+
                                         <a
-                                            href="#"
-                                            class="text-indigo-600 hover:text-indigo-900"
-                                            >Edit</a
-                                        >
-                                        <a
-                                            href="#"
-                                            class="text-red-600 hover:text-red-900 ml-5"
+                                            href="javascript:void(0)"
+                                            @click="deleteClient(u.id)"
+                                            class="ml-5"
+                                            :class="{
+                                                'text-red-400 hover:text-red-400': loading,
+                                                'text-red-600 hover:text-red-900': !loading,
+                                            }"
                                             >Delete</a
                                         >
                                     </td>
@@ -202,19 +234,28 @@ export default {
                 manually: false,
                 code: "",
             }),
-            hasHidden: [], //hidden
+            showData: this.user,
+            loading: false,
+            column: "name",
+            searchValue: "",
         };
     },
 
     methods: {
-        deleteCode(id) {
+        deleteClient(id) {
+            if (this.loading) return;
+
+            this.loading = true;
+
             let _this = this;
-            this.$inertia.delete(route("license.destroy", { license: id }), {
+            this.$inertia.delete(route("client.destroy", id), {
                 onSuccess() {
                     _this.hasHidden = [];
+                    _this.loading = false;
                 },
             });
         },
+
         convertToFormat(code = "") {
             let rebuildString = "";
 
@@ -227,21 +268,23 @@ export default {
             }
             return rebuildString.toUpperCase();
         },
-        searchCode(event) {
-            let search = event.target.value
-                .replaceAll(" ", "")
-                .toLocaleLowerCase();
 
-            this.hasHidden = [];
-            if (search !== "")
-                this.licenses.forEach((value) =>
-                    this.hasHidden.push(value.licence.indexOf(search) < 0)
-                );
-            // if (keyCode === 13)
-            //     this.$inertia.get(route("license.index") + "?search=" + search);
+        search(event = false) {
+            this.showData = [];
+            console.log(event);
 
-            // console.log({ keyCode, event });
-            console.log(this.hasHidden, this.licenses);
+            this.searchValue = event ? event.target.value : this.searchValue;
+            let search = this.searchValue;
+
+            console.log(search);
+
+            if (search === "") return console.log((this.showData = this.user));
+
+            this.user.forEach((value) => {
+                if (value[this.column].indexOf(search) >= 0)
+                    this.showData.push(value);
+            });
+            console.log(this.showData);
         },
     },
 };

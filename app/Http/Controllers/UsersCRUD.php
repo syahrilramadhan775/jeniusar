@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClientResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class UsersCRUD extends Controller
 {
@@ -30,7 +32,7 @@ class UsersCRUD extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('User/Create');
     }
 
     /**
@@ -41,7 +43,24 @@ class UsersCRUD extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->validate([
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|unique:users|email',
+        ]);
+
+        $user = User::create([
+            'username' => $input['username'],
+            'email' => $input['email'],
+            'password' => Hash::make(Str::random(9)),
+        ]);
+
+        $user->profile()->create([
+            'name' => $input['name']
+        ]);
+
+
+        return redirect()->route('client.index');
     }
 
     /**
@@ -63,7 +82,11 @@ class UsersCRUD extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+
+        return Inertia::render('User/Update', [
+            'user' => new ClientResource($user)
+        ]);
     }
 
     /**
@@ -76,6 +99,30 @@ class UsersCRUD extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $user = User::find($id);
+
+        $rules = [
+            'username' => 'string|required|min:9',
+            'name' => 'string|required|min:9',
+        ];
+
+        // if form is filled
+        if ($user->username != $request->username)
+            $rules['username'] = 'unique:users';
+
+        $request->validate($rules);
+
+        //  Update User
+        $user->update([
+            'username' => $request->username,
+        ]);
+
+        $user->profile->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('client.index');
     }
 
     /**
@@ -86,6 +133,8 @@ class UsersCRUD extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::destroy($id);
+
+        return redirect()->route('client.index');
     }
 }

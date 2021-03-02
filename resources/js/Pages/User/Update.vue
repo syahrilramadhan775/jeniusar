@@ -8,12 +8,10 @@
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <jet-form-section @submitted="CreateUser">
+                <jet-form-section @submitted="UpdateUserProfile">
                     <template #title> Users </template>
 
-                    <template #description>
-                        Create Users For Jenius Ar
-                    </template>
+                    <template #description> Edit Users Jenius Ar </template>
 
                     <template #form>
                         <!-- Email -->
@@ -22,8 +20,9 @@
                             <jet-input
                                 id="email"
                                 type="text"
-                                class="mt-1 block w-full transition-colors"
+                                class="mt-1 block w-full transition-colors bg-gray-300"
                                 v-model="form.email"
+                                readonly="true"
                             />
                             <jet-input-error
                                 :message="form.errors.email"
@@ -63,6 +62,23 @@
                             />
                         </div>
                         <!-- End-name -->
+
+                        <!-- license -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="license" value="license" />
+                            <jet-input
+                                id="license"
+                                type="text"
+                                class="mt-1 block w-full transition-colors bg-gray-300"
+                                v-model="form.license"
+                                readonly="true"
+                            />
+                            <jet-input-error
+                                :message="form.errors.license"
+                                class="mt-2"
+                            />
+                        </div>
+                        <!-- End-license -->
                     </template>
 
                     <template #actions>
@@ -108,21 +124,24 @@ export default {
         AppLayout,
     },
 
+    props: ["user"],
+
     data() {
         return {
             form: this.$inertia.form({
-                email: "",
-                username: "",
-                name: "",
-                license: "",
+                _method: "PUT",
+                email: this.user.email,
+                username: this.user.username,
+                name: this.user.name,
+                license: this.user.license,
             }),
             loading: false,
         };
     },
 
     methods: {
-        CreateUser() {
-            this.form.post(route("client.store"));
+        UpdateUserProfile() {
+            this.form.post(route("client.update", this.user.id));
         },
     },
 };
