@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\ChangeProfileNotification;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class ChangeProfileController extends Controller
@@ -21,10 +25,15 @@ class ChangeProfileController extends Controller
 
         $token = $request->token;
         $email = $request->email;
+        $user = $this->getProfile($email, $token);
+
+        // Return If Not User Account & Invalid 
+        if (!$user) return $this->responseInvalidRequest();
 
         return Inertia::render('User/ChangeProfile', [
             'token' => $token,
             'email' => $email,
+            'name' => $user->profile->name,
         ]);
     }
 
@@ -40,13 +49,13 @@ class ChangeProfileController extends Controller
         if ($this->hasNotValid())
             return abort(404);
 
-        $request->validate([
-            'name' => 'required|string|min:3',
-        ]);
+        $request->validate(['name' => 'required|string|min:3']);
+
         $token = $request->token;
         $user = $this->getProfile($request->email, $token);
 
-        if (!$user) return redirect()->back()->withErrors(['name' => 'Token Tidak Sesuai atau email tidak ketemu']);
+        // Return If Not User Account & Invalid 
+        if (!$user) return $this->responseInvalidRequest();
 
         $user->profile()->update([
             'name' => $request->name
@@ -55,6 +64,27 @@ class ChangeProfileController extends Controller
         $user->tokens()->where('token', $token)->delete();
 
         return Inertia::render('User/ProfileSuccess');
+    }
+
+    function mail($id)
+    {
+        /** @var User */
+        $user = User::find($id);
+
+        $token = $user->createToken('Set Name Mail')->accessToken->token;
+        $email = $user->email;
+
+        Notification::route('mail', $email)
+            ->notify(new ChangeProfileNotification($this->buildUrl($email, $token)));
+
+        return [
+            'status' => 'success'
+        ];
+    }
+
+    function buildUrl($email, $token)
+    {
+        return route('profile.get') . "?email=$email&token=$token";
     }
 
     /**
@@ -81,5 +111,10 @@ class ChangeProfileController extends Controller
     private function hasNotValid()
     {
         return !(request()->has('email') && request()->has('token'));
+    }
+
+    private function responseInvalidRequest()
+    {
+        return redirect()->back()->withErrors(['name' => 'Token Tidak Sesuai atau email tidak ketemu']);
     }
 }

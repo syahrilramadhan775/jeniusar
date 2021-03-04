@@ -1,0 +1,65 @@
+FROM php:8.0
+
+# Copy composer.lock and composer.json
+COPY composer.lock composer.json /var/www/
+
+# Set working directory
+WORKDIR /var/www
+
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl
+
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# Install extensions
+RUN docker-php-ext-install pdo_mysql exif pcntl
+# RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
+RUN apt-get update -y && apt-get install -y libmcrypt-dev openssl
+RUN docker-php-ext-install -y php8.0-cli php8.0-dev \
+    php8.0-pgsql php8.0-sqlite3 php8.0-gd \
+    php8.0-curl php8.0-memcached \
+    php8.0-imap php8.0-mysql php8.0-mbstring \
+    php8.0-xml php8.0-zip php8.0-bcmath php8.0-soap \
+    php8.0-intl php8.0-readline \
+    php8.0-msgpack php8.0-igbinary php8.0-ldap \
+    php8.0-redis
+
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Copy existing application directory contents
+COPY . /var/www
+
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
+
+# Change current user to www
+USER www
+
+# Expose port 9000 and start php-fpm server
+
+
+
+CMD php artisan serve --host=0.0.0.0 --port=8000
+
+EXPOSE 9000

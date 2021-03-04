@@ -159,28 +159,15 @@
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
                                     >
-                                        <inertia-link
-                                            :href="
-                                                loading
-                                                    ? '#'
-                                                    : route('client.edit', u.id)
-                                            "
-                                            :class="{
-                                                'text-indigo-300 hover:text-indigo-300': loading,
-                                                'text-indigo-600 hover:text-indigo-900': !loading,
-                                            }"
-                                            >Edit
-                                        </inertia-link>
-
                                         <a
                                             href="javascript:void(0)"
                                             @click="changeProfileByEmail(u.id)"
                                             class="ml-5"
                                             :class="{
-                                                'text-green-400 hover:text-green-400': loading,
-                                                'text-green-600 hover:text-green-900': !loading,
+                                                'text-red-400 hover:text-red-400': loading,
+                                                'text-red-600 hover:text-red-900': !loading,
                                             }"
-                                            >Send Email</a
+                                            >Change Profile By Email</a
                                         >
                                         <a
                                             href="javascript:void(0)"
@@ -278,6 +265,7 @@ export default {
             }
             return rebuildString.toUpperCase();
         },
+
         changeProfileByEmail(id) {
             var _this = this;
             this.loading = true;

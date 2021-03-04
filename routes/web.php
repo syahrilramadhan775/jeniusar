@@ -33,10 +33,12 @@ Route::middleware(['static.authenticate'])->group(function () {
 
     Route::resource('license', 'VerficationCodeCRUD');
     Route::resource('client', 'UsersCRUD');
+
+    Route::post('/profile/mail-send/{id}', 'ChangeProfileController@mail')->name('profile.change-mail');
 });
 
 // Profile
-Route::get('/profile/change', 'ChangeProfileController@edit');
+Route::get('/profile/change', 'ChangeProfileController@edit')->name('profile.get');
 Route::post('/profile/change', 'ChangeProfileController@update')->name('profile.post');
 
 // Overwrite Laravel Forify Authenticate

@@ -7,7 +7,10 @@
         <jet-validation-errors class="mb-4" />
 
         <form @submit.prevent="submit">
-            Change Name Account
+            <span class="text-gray-500">
+                Ubah nama akun
+                <span class="font-semibold">{{ name }}</span> Aplikasi Jenius Ar
+            </span>
             <div class="mt-4">
                 <jet-label for="name" value="Name" />
                 <jet-input

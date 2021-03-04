@@ -1,0 +1,34 @@
+version: "3.0"
+
+services:
+  jenius.ar:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    image: jenius-ar-backend
+    ports:
+      - "3001:9000"
+    networks:
+      - jenius
+    volumes:
+      - ".:/var/www"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: "mysql:8.0"
+    ports:
+      - "3037:3306"
+    networks:
+      - jenius
+    environment:
+      MYSQL_ROOT_PASSWORD: "eaudeparfum"
+      MYSQL_DATABASE: "jeniusar"
+      MYSQL_USER: "jenius"
+      MYSQL_PASSWORD: "j3n!us909"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"\
+      SERVICE_NAME: mysql
+
+networks:
+  jenius:
+    driver: bridge
