@@ -32,6 +32,7 @@ class UsersCRUD extends Controller
      */
     public function create()
     {
+
         return Inertia::render('User/Create');
     }
 
@@ -85,7 +86,8 @@ class UsersCRUD extends Controller
         $user = User::find($id);
 
         return Inertia::render('User/Update', [
-            'user' => new ClientResource($user)
+            'user' => new ClientResource($user),
+            'user' => $user
         ]);
     }
 
@@ -101,7 +103,6 @@ class UsersCRUD extends Controller
         //
 
         $user = User::find($id);
-
         $rules = [
             'username' => 'string|required|min:9',
             'name' => 'string|required|min:9',

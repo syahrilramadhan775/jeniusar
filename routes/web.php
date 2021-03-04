@@ -35,6 +35,10 @@ Route::middleware(['static.authenticate'])->group(function () {
     Route::resource('client', 'UsersCRUD');
 });
 
+// Profile
+Route::get('/profile/change', 'ChangeProfileController@edit');
+Route::post('/profile/change', 'ChangeProfileController@update')->name('profile.post');
+
 // Overwrite Laravel Forify Authenticate
 Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
 Route::post('login', [LoginController::class, 'authenticate']);
