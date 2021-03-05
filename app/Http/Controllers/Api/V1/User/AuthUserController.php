@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\API\V1\Exception\LoginExceptionResource;
-use App\Http\Resources\API\V1\Exception\QrRegisterException;
 use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
 use App\Http\Resources\API\V1\User\UserResource;
@@ -26,12 +25,11 @@ class AuthUserController extends Controller
     //* Object Register (OK).
     public function registration(Request $request)
     {
-        $valid = new Valid();
+        $valid = new ValidAuthController();
 
-        //If No Error Data.
+        //? If No Error Data.
         if (!$valid->Register($request)) {
-
-            // Save Data.
+            //? Save Data.
             $user = User::create([
                 'username' => $request->username,
                 'email' => $request->email,
@@ -51,13 +49,22 @@ class AuthUserController extends Controller
     //* Object Login By Username Or Email (OK).
     public function login(Request $request)
     {
-        $valid = new Valid();
-        if (!$valid->Login($request)) {
-            //Filter By Email.
-            $user = User::where('email', $request->email)->first();
+        //? Initialitation Object Valid.
+        $valid = new ValidAuthController();
 
-            //Check Auth If Exist Data User.
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $usermail = $request->usermail;
+
+        if (!$valid->Login($request)) {
+            //? Filter By Username Or Email.
+            $user = User::where('username', $usermail)->orWhere(function ($query) use ($usermail) {
+                $query->where('email', $usermail);
+            })->first();
+
+            //? Check Auth If Exist Data User.
+            if (
+                Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
+                Auth::attempt(['email' => $usermail, 'password' => $request->password])
+            ) {
                 return new LoginResource($user);
             } else {
                 return new LoginExceptionResource($this);
@@ -85,122 +92,26 @@ class AuthUserController extends Controller
     //* Object qrRegistration (OK).
     public function qrRegistration(Request $request)
     {
-        $valid = new Valid();
+        $valid = new ValidAuthController();
+
+        //? If No Error Data.
         if (!$valid->qrRegister($request)) {
-            //Licence
-            $Licence = Licence::where('licence', $request->qrcode)->first();
-            return $this->licence($Licence, $request);
+            //? Get A Licence.
+            $Licence = Licence::where('licence', $request->licence)->first();
+
+            //? If Licence No Exist
+            if (!$Licence) {
+                return [
+                    'status' => false,
+                    'problems' => [
+                        'licence' => "The Licence Not Found"
+                    ]
+                ];
+            } else {
+                return LicenseController::licence($Licence, $request);
+            }
         } else {
             return $valid->qrRegister($request);
-        }
-    }
-
-    private function licence($Licence, Request $request)
-    {
-        if (!$Licence->user_id) {
-            //Save Data.
-            $user = User::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password)
-            ]);
-            Profile::create([
-                'user_id' => $user->id,
-                'name' => $request->name
-            ]);
-            $key = Licence::find($Licence->id);
-            $key->user_id = $user->id;
-            $key->save();
-
-            return new QrRegistrationResource($user);
-        } else {
-            return $valid->qrRegister($request);
-        }
-    }
-}
-
-class Valid
-{
-    public static function Register(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            "username" => 'required|unique:users',
-            "email" => 'required|unique:users',
-            "password" => 'required|min:8',
-            "confirm_password" => 'required|same:password',
-            "name" => 'required',
-        ]);
-
-        //Shapes 1 : Mas Kevin Require.
-        // if ($valid->fails()) {
-        //     //Convert Array Data On Problems(), Not Object To Array.
-        //     return response([
-        //         'status' => false,
-        //         'problems' => collect($valid->errors()->getMessages())
-        //             ->map(function ($item) {
-        //                 return join(',', $item);
-        //             })->flatten()
-        //     ]);
-        // }
-
-        //Shapes 2 : Kak Faiz Require.
-        if ($valid->fails()) {
-            return collect($valid->errors()->getMessages())
-                ->map(function ($item) {
-                    return join(',', $item);
-                });
-        }
-    }
-
-    public static function qrRegister(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            "username" => 'required|unique:users',
-            "email" => 'required|unique:users',
-            "password" => 'required|min:8',
-            "confirm_password" => 'required|same:password',
-            "name" => 'required',
-            "qrcode" => 'required'
-        ]);
-
-        //Shapes 1 : Mas Kevin Require.
-        // if ($valid->fails()) {
-        //     //Convert Array Data On Problems(), Not Object To Array.
-        //     return response([
-        //         'status' => false,
-        //         'problems' => collect($valid->errors()->getMessages())
-        //             ->map(function ($item) {
-        //                 return join(',', $item);
-        //             })->flatten()
-        //     ]);
-        // }
-
-        //Shapes 2 : Kak Faiz Require.
-        if ($valid->fails()) {
-            return collect($valid->errors()->getMessages())
-                ->map(function ($item) {
-                    return join(',', $item);
-                });
-        }
-    }
-
-    public static function Login(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            "email" => "required|email",
-            "password" => "required|min:8",
-        ]);
-
-        //Check Validation.
-        if ($valid->fails()) {
-            //Convert Array Data On Problems(), Not Object To Array.
-            return response([
-                'status' => false,
-                'problems' => collect($valid->errors()->getMessages())
-                    ->map(function ($item) {
-                        return join(',', $item);
-                    })->flatten()
-            ]);
         }
     }
 }
