@@ -90,28 +90,28 @@ class AuthUserController extends Controller
     }
 
     //* Object qrRegistration (OK).
-    public function qrRegistration(Request $request)
-    {
-        $valid = new ValidAuthController();
+    // public function qrRegistration(Request $request)
+    // {
+    //     $valid = new ValidAuthController();
 
-        //? If No Error Data.
-        if (!$valid->qrRegister($request)) {
-            //? Get A Licence.
-            $Licence = Licence::where('licence', $request->licence)->first();
+    //     //? If No Error Data.
+    //     if (!$valid->qrRegister($request)) {
+    //         //? Get A Licence.
+    //         $Licence = Licence::where('licence', $request->licence)->first();
 
-            //? If Licence No Exist
-            if (!$Licence) {
-                return [
-                    'status' => false,
-                    'problems' => [
-                        'licence' => "The Licence Not Found"
-                    ]
-                ];
-            } else {
-                return LicenseController::licence($Licence, $request);
-            }
-        } else {
-            return $valid->qrRegister($request);
-        }
-    }
+    //         //? If Licence No Exist
+    //         if (!$Licence) {
+    //             return [
+    //                 'status' => false,
+    //                 'problems' => [
+    //                     'licence' => "The Licence Not Found"
+    //                 ]
+    //             ];
+    //         } else {
+    //             return LicenseController::licence($Licence, $request);
+    //         }
+    //     } else {
+    //         return $valid->qrRegister($request);
+    //     }
+    // }
 }
