@@ -7,18 +7,18 @@ services:
       context: ./
     image: jenius-ar-backend
     ports:
-      - "3001:9000"
+      - "3001:8000"
     networks:
       - jenius
     volumes:
       - ".:/var/www"
     depends_on:
-      - mysql
+      - mariadb
 
-  mysql:
-    image: "mysql:8.0"
+  mariadb:
+    image: "mariadb"
     ports:
-      - "3037:3306"
+      - "3036:3306"
     networks:
       - jenius
     environment:
@@ -26,8 +26,7 @@ services:
       MYSQL_DATABASE: "jeniusar"
       MYSQL_USER: "jenius"
       MYSQL_PASSWORD: "j3n!us909"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"\
-      SERVICE_NAME: mysql
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
 networks:
   jenius:

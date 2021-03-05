@@ -1,9 +1,4 @@
 @component('mail::message')
-<style>
-    .im{
-        color : #3d4852 !important;
-    }
-</style>
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
