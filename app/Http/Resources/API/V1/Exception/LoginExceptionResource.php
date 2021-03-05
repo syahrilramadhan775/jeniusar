@@ -4,7 +4,7 @@ namespace App\Http\Resources\API\V1\Exception;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QrRegisterException extends JsonResource
+class LoginExceptionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class QrRegisterException extends JsonResource
         return [
             'status' => false,
             'problems' => [
-                'licence' => 'The Licence Already Exists'
+                'data' => "Unauthorized Data."
             ]
         ];
     }
