@@ -7,13 +7,11 @@ use App\Http\Resources\API\V1\Exception\LoginExceptionResource;
 use App\Http\Resources\API\V1\Exception\QrRegisterException;
 use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
-use App\Http\Resources\API\V1\User\QrRegistrationResource;
 use App\Http\Resources\API\V1\User\UserResource;
 use App\Models\Licence;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,6 +23,7 @@ class AuthUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //* Object Register (OK).
     public function registration(Request $request)
     {
         $valid = new Valid();
@@ -49,6 +48,7 @@ class AuthUserController extends Controller
         }
     }
 
+    //* Object Login By Username Or Email (OK).
     public function login(Request $request)
     {
         $valid = new Valid();
@@ -67,12 +67,13 @@ class AuthUserController extends Controller
         }
     }
 
+    //* Object Logout (OK).
     public function logout()
     {
-        //Get Data User By Auth.
+        //? Get Data User By Auth.
         $user = Auth::user();
 
-        //If Exist Data User.
+        //? If Exist Data User.
         if (!is_null($user)) {
             $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
             return new LogoutResource($this);
@@ -81,6 +82,7 @@ class AuthUserController extends Controller
         }
     }
 
+    //* Object qrRegistration (OK).
     public function qrRegistration(Request $request)
     {
         $valid = new Valid();
@@ -112,7 +114,7 @@ class AuthUserController extends Controller
 
             return new QrRegistrationResource($user);
         } else {
-            return new QrRegisterException($this);
+            return $valid->qrRegister($request);
         }
     }
 }

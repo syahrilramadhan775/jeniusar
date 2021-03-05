@@ -15,10 +15,11 @@ class QrRegistrationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'status' => true,
             'id' => $this->id,
             'username' => $this->username,
             'email' => $this->email,
-            'status' => true
+            'name' => $this->profile->name,
         ];
     }
 }

@@ -15,7 +15,7 @@ class Jeniusar extends Migration
     {
         Schema::create('profile', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
 

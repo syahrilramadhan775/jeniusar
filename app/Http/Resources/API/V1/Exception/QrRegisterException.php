@@ -16,7 +16,9 @@ class QrRegisterException extends JsonResource
     {
         return [
             'status' => false,
-            'message' => 'the license already exists'
+            'problems' => [
+                'licence' => 'The Licence Already Exists'
+            ]
         ];
     }
 }
