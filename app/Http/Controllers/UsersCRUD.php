@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ClientResource;
+use App\Models\Licence;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -48,7 +49,14 @@ class UsersCRUD extends Controller
             'name' => 'required',
             'username' => 'required|unique:users',
             'email' => 'required|unique:users|email',
+            'license' => 'required|min:12|max:12'
         ]);
+        $license = Licence::where('licence', $input['license']);
+        $hasLicense = $license->exists();
+
+        // check if license key exists
+        if (!$hasLicense)
+            return redirect()->back()->withErrors(['license' => 'Serial Code Tidak ditemukan']);
 
         $user = User::create([
             'username' => $input['username'],
@@ -56,10 +64,12 @@ class UsersCRUD extends Controller
             'password' => Hash::make(Str::random(9)),
         ]);
 
+
         $user->profile()->create([
             'name' => $input['name']
         ]);
 
+        $license->update(['user_id' => $user->id]);
 
         return redirect()->route('client.index');
     }
@@ -87,7 +97,7 @@ class UsersCRUD extends Controller
 
         return Inertia::render('User/Update', [
             'user' => new ClientResource($user),
-            'user' => $user
+            // 'user' => $user
         ]);
     }
 

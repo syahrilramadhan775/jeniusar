@@ -80,8 +80,23 @@
                                     </svg>
                                 </button>
                                 <div class="flex flex-col">
-                                    <div class="font-semibold text-lg">
-                                        {{ convertToFormat(license.licence) }}
+                                    <div
+                                        class="font-semibold text-lg"
+                                        :class="{
+                                            'text-green-300':
+                                                copied == license.licence,
+                                        }"
+                                        @click="
+                                            copyToClipboard(license.licence)
+                                        "
+                                    >
+                                        {{
+                                            copied == license.licence
+                                                ? "copied"
+                                                : convertToFormat(
+                                                      license.licence
+                                                  )
+                                        }}
                                     </div>
                                     <span
                                         class="text-gray-400"
@@ -200,6 +215,12 @@
             </jet-dialog-modal>
         </div>
     </app-layout>
+
+    <input
+        type="text"
+        ref="inputCopy"
+        style="position: absolute; top: -9999999px; left: -99999px"
+    />
 </template>
 
 <script>
@@ -256,7 +277,7 @@ export default {
             }),
             hasHidden: [], //hidden
             modalShow: false,
-
+            copied: false,
             ...DataCanvasItem,
         };
     },
@@ -282,6 +303,22 @@ export default {
                 rebuildString += code.substr(sliceIndex, 4) + " ";
             }
             return rebuildString.toUpperCase();
+        },
+
+        copyToClipboard(val) {
+            var inputCopy = this.$refs.inputCopy;
+
+            inputCopy.value = val;
+
+            inputCopy.select();
+
+            inputCopy.setSelectionRange(0, 99999); /* For mobile devices */
+
+            document.execCommand("copy");
+
+            this.copied = val;
+
+            setTimeout(() => (this.copied = false), 300);
         },
 
         searchCode(event) {

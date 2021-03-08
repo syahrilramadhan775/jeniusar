@@ -63,6 +63,22 @@
                             />
                         </div>
                         <!-- End-name -->
+
+                        <!-- name -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <jet-label for="license" value="License" />
+                            <jet-input
+                                id="license"
+                                type="text"
+                                class="mt-1 block w-full transition-colors"
+                                v-model="form.license"
+                            />
+                            <jet-input-error
+                                :message="form.errors.license"
+                                class="mt-2"
+                            />
+                        </div>
+                        <!-- End-name -->
                     </template>
 
                     <template #actions>
@@ -117,6 +133,7 @@ export default {
                 license: "",
             }),
             loading: false,
+            tempCopy: "",
         };
     },
 

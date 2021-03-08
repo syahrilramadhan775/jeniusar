@@ -76,6 +76,8 @@
             </div>
         </div>
     </app-layout>
+
+    <input type="hidden" ref="inputCopy" class="hidden" />
 </template>
 
 <script>
@@ -109,6 +111,7 @@ export default {
                 licence: "",
             }),
             loading: false,
+            copied: false,
         };
     },
 
@@ -122,6 +125,17 @@ export default {
                     this.loading = false;
                 }, // stop loading modal
             });
+        },
+        copyToClipboard(val) {
+            var inputCopy = this.$refs.inputCopy;
+
+            inputCopy.value = val;
+
+            inputCopy.select();
+
+            inputCopy.setSelectionRange(0, 99999); /* For mobile devices */
+
+            document.execCommand("copy");
         },
     },
 };
