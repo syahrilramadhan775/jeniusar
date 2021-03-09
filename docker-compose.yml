@@ -17,10 +17,10 @@ services:
 
   mariadb:
     image: "mariadb"
-    ports:
-      - "3036:3306"
     networks:
       - jenius
+    volumes: 
+      - "./docker/sql:/docker-entrypoint-initdb.d"
     environment:
       MYSQL_ROOT_PASSWORD: "eaudeparfum"
       MYSQL_DATABASE: "jeniusar"

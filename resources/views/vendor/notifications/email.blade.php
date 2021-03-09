@@ -11,7 +11,9 @@
 @endif
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
+<span style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left;color:#718096 !important;margin-bottom:16px">
 {{ $line }}
+</span>
 
 @endforeach
 
@@ -34,16 +36,24 @@
 
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
+<span style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left;color:#718096 !important;margin-bottom:16px">
+
 {{ $line }}
+</span>
 
 @endforeach
 
 {{-- Salutation --}}
 @if (! empty($salutation))
+
+<span style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left;color:#718096 !important;margin-bottom:16px">
 {{ $salutation }}
+</span>
 @else
+<span style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left;color:#718096 !important;margin-bottom:16px">
 @lang('Regards'),<br>
 {{ config('app.name') }}
+</span>
 @endif
 
 {{-- Subcopy --}}

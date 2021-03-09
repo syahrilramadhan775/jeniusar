@@ -42,6 +42,9 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Copy existing application directory contents
 COPY . /var/www
 
+# Overidding application .env
+Copy .env.prod /var/www/.env
+
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
@@ -49,8 +52,6 @@ COPY --chown=www:www . /var/www
 USER www
 
 # Expose port 9000 and start php-fpm server
-
-
 
 CMD php artisan serve --host=0.0.0.0 --port=8000
 
