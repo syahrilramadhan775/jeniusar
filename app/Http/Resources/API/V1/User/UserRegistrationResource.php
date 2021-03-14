@@ -4,7 +4,7 @@ namespace App\Http\Resources\API\V1\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QrRegistrationResource extends JsonResource
+class UserRegistrationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

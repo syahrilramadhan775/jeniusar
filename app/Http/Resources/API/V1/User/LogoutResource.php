@@ -15,8 +15,8 @@ class LogoutResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'status' => http_response_code(201),
-            'message' => 'Success Logout'
+            'status' => true,
+            'message' => 'Berhasil Logout'
         ];
     }
 }

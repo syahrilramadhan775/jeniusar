@@ -19,22 +19,28 @@ class UserPassword extends Controller
      */
     public function changePassword(Request $request)
     {
-        if (Hash::check($request->current_password, Auth::user()->password) == false) {
-            return [
-                "status" => false,
-                "problems" => [
-                    "data" => "error change password"
-                ]
-            ];
+        $valid = new ValidAuthController();
+        // test1234567
+        if (!$valid->changePassword($request)) {
+            if (Hash::check($request->current_password, Auth::user()->password) == false) {
+                return [
+                    "status" => false,
+                    "problems" => [
+                        "password" => "Gagal Mengganti Kata Sandi"
+                    ]
+                ];
+            } else {
+                $pass = Hash::make($request->new_password);
+                User::where('id', $request->id)->update([
+                    "password" => $pass
+                ]);
+                return [
+                    "status" => true,
+                    "message" => "Berhasil Mengganti Kata Sandi"
+                ];
+            }
         } else {
-            $pass = Hash::make($request->new_password);
-            User::where('id', $request->id)->update([
-                "password" => $pass
-            ]);
-            return [
-                "status" => true,
-                "message" => "Success"
-            ];
+            return $valid->changePassword($request);
         }
     }
 }

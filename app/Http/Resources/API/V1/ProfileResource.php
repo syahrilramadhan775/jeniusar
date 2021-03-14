@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\API\V1\User;
+namespace App\Http\Resources\API\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QrRegistrationResource extends JsonResource
+class ProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,6 @@ class QrRegistrationResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'status' => true,
-            'message' => 'Berhasil Registrasi',
-        ];
+        return parent::toArray($request);
     }
 }

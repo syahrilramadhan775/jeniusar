@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\API\V1\Exception\LoginExceptionResource;
 use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
+use App\Http\Resources\API\V1\User\UserRegistrationResource;
 use App\Http\Resources\API\V1\User\UserResource;
 use App\Models\Licence;
 use App\Models\Profile;
@@ -40,7 +41,7 @@ class AuthUserController extends Controller
                 'name' => $request->name
             ]);
 
-            return new UserResource($user);
+            return new UserRegistrationResource($user);
         } else {
             return $valid->Register($request);
         }
@@ -85,7 +86,7 @@ class AuthUserController extends Controller
             $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
             return new LogoutResource($this);
         } else {
-            return response(["status" => false, "message" => "Not Logout"]);
+            return ["status" => false, "message" => "Gagal Logout"];
         }
     }
 
@@ -103,8 +104,9 @@ class AuthUserController extends Controller
             if (!$Licence) {
                 return [
                     'status' => false,
+                    'message' => 'Gagal Registrasi',
                     'problems' => [
-                        'licence' => "The Licence Not Found"
+                        'licence' => "Lisensi Tidak Di Temukan"
                     ]
                 ];
             } else {

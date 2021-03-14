@@ -14,7 +14,7 @@ class ValidAuthController extends Controller
         //? Create Validation
         $valid = Validator::make($request->all(), [
             "username" => 'required|unique:users',
-            "email" => 'required|unique:users',
+            "email" => 'required|email|unique:users',
             "password" => 'required|min:8',
             "confirm_password" => 'required|same:password',
             "name" => 'required',
@@ -93,8 +93,13 @@ class ValidAuthController extends Controller
 
         //? Check If Not Exist Data.
         if ($valid->fails()) {
-            //? Return Object.
-            return response(["message" => "Unauthorized Data.", "validation_errors" => $valid->errors()], 401);
+            return response([
+                'status' => false,
+                'problems' => collect($valid->errors()->getMessages())
+                    ->map(function ($item) {
+                        return join(',', $item);
+                    })
+            ]);
         }
     }
 }
