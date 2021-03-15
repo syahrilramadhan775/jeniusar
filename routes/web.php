@@ -27,9 +27,9 @@ Route::get('/', function () {
 });
 
 
-Route::get('send/success', function () {
-    return Inertia::render('SuccessRegister');
-});
+Route::get('success/verify', function () {
+    return Inertia::render('SuccessVerify');
+})->name('success.verify');
 
 
 Route::middleware(['static.authenticate'])->group(function () {
