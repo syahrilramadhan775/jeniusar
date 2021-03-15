@@ -7,13 +7,17 @@ use App\Http\Resources\API\V1\Exception\LoginExceptionResource;
 use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
 use App\Http\Resources\API\V1\User\UserRegistrationResource;
-use App\Http\Resources\API\V1\User\UserResource;
 use App\Models\Licence;
 use App\Models\Profile;
 use App\Models\User;
+use App\Notifications\VerifikasiEmail;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Inertia\Inertia;
+use PhpParser\Node\Expr\FuncCall;
 
 class AuthUserController extends Controller
 {
@@ -41,6 +45,8 @@ class AuthUserController extends Controller
                 'name' => $request->name
             ]);
 
+            $user->sendEmailVerificationNotification();
+
             return new UserRegistrationResource($user);
         } else {
             return $valid->Register($request);
@@ -66,7 +72,14 @@ class AuthUserController extends Controller
                 Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
                 Auth::attempt(['email' => $usermail, 'password' => $request->password])
             ) {
-                return new LoginResource($user);
+                if (Auth::user()->email_verified_at == null) {
+                    return [
+                        'status' => false,
+                        'message' => "Anda Belum Verifikasi Email, Silahkan Verifikasi Email Anda."
+                    ];
+                } else {
+                    return new LoginResource($user);
+                }
             } else {
                 return new LoginExceptionResource($this);
             }
@@ -115,5 +128,10 @@ class AuthUserController extends Controller
         } else {
             return $valid->qrRegister($request);
         }
+    }
+
+    public function display()
+    {
+        return Inertia::render('User/VerificationSuccess');
     }
 }

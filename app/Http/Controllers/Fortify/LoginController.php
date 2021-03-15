@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fortify;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Http\Controllers\Api\V1\User\ValidAuthController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

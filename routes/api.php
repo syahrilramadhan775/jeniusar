@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\User\AuthUserController;
 use App\Http\Controllers\Api\V1\User\UserController;
 use App\Http\Controllers\Api\V1\User\UserPassword;
+use App\Http\Controllers\EmailVerifyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,16 @@ Route::prefix('v1')->group(function () {
     Route::post("register", [AuthUserController::class, 'registration']);
     Route::post("qrregister", [AuthUserController::class, 'qrRegistration']);
     Route::post("login", [AuthUserController::class, 'login']);
+
+    // Verify email
+    Route::get('/email/verify/{id}/{hash}', [EmailVerifyController::class, '__invoke'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    // Resend link to verify email
+    Route::post('/email/verify/resend', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+    })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
     // sanctum auth middleware routes
     Route::middleware('auth:api')->group(function () {

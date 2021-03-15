@@ -30,6 +30,7 @@ class LicenseController extends Controller
             $key = Licence::find($Licence->id);
             $key->user_id = $user->id;
             $key->save();
+            $user->sendEmailVerificationNotification();
 
             return new QrRegistrationResource($user);
         } else {
