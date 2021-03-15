@@ -6,6 +6,7 @@ use App\Http\Resources\ClientResource;
 use App\Models\Licence;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use illuminate\Support\Str;
 use Inertia\Inertia;
 use NumberFormatter;
@@ -45,11 +46,12 @@ class DashboardController extends Controller
 
     private function lastRegisteredUser()
     {
+
+        /** @var User */
         $user = User::has('licence');
 
-        $user->whereHas('licence', function ($user) {
-            $user->orderBy('updated_at', 'DESC');
-        });
+        $user->orderBy('updated_at', 'desc');
+        $user->limit(5);
 
         return ClientResource::collection(
             $user->get()

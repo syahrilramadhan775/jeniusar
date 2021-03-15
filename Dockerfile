@@ -3,6 +3,7 @@ FROM php:8.0
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
 
+
 # Set working directory
 WORKDIR /var/www
 
@@ -42,15 +43,18 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Copy existing application directory contents
 COPY . /var/www
 
-# Overidding application .env
-Copy .env.prod /var/www/.env
+# Copy existing application directory contents
+COPY .env.prod /var/www/.env
+
+# install all laravel dependencies
+RUN composer install --ignore-platform-reqs
 
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
+
 # Change current user to www
 USER www
-
 # Expose port 9000 and start php-fpm server
 
 CMD php artisan serve --host=0.0.0.0 --port=8000

@@ -283,13 +283,27 @@ export default {
     },
 
     methods: {
-        deleteCode(id) {
+        async deleteCode(id) {
             let _this = this;
-            this.$inertia.delete(route("license.destroy", { license: id }), {
-                onSuccess() {
-                    _this.hasHidden = [];
-                },
+            const modal = await this.$swal({
+                title: "Are you sure?",
+                text: "You will delete this user forever",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, keep it",
             });
+
+            if (modal.isConfirmed)
+                this.$inertia.delete(
+                    route("license.destroy", { license: id }),
+                    {
+                        onSuccess() {
+                            _this.hasHidden = [];
+                            _this.$swal("Data Success Deleted");
+                        },
+                    }
+                );
         },
 
         convertToFormat(code = "") {

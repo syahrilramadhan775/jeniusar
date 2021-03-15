@@ -22,7 +22,6 @@
                                 type="text"
                                 class="mt-1 block w-full transition-colors bg-gray-300"
                                 v-model="form.email"
-                                readonly="true"
                             />
                             <jet-input-error
                                 :message="form.errors.email"

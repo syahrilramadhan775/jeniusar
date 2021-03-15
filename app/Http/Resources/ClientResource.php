@@ -23,7 +23,7 @@ class ClientResource extends JsonResource
             'license' => $this->licence ? $this->licence->licence : 'Unlicenced',
             // '' =>
             'created_at' => $this->licence ? $this->licence->updated_at->diffForHumans()
-                :  $this->created_at->diffForHumans(),
+                :  $this->updated_at->diffForHumans(),
         ];
     }
 }

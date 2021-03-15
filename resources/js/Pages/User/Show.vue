@@ -218,7 +218,6 @@ import JetDangerButton from "@/Jetstream/DangerButton";
 import AppLayout from "@/Layouts/AppLayout";
 import LinkButton from "@/Components/LinkButton";
 import ElButton from "@/Components/Button";
-
 export default {
     components: {
         JetActionMessage,
@@ -252,18 +251,28 @@ export default {
     },
 
     methods: {
-        deleteClient(id) {
+        async deleteClient(id) {
             if (this.loading) return;
 
-            this.loading = true;
-
             let _this = this;
-            this.$inertia.delete(route("client.destroy", id), {
-                onSuccess() {
-                    _this.hasHidden = [];
-                    _this.loading = false;
-                },
+            const modal = await this.$swal({
+                title: "Are you sure?",
+                text: "You will delete this user forever",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, keep it",
             });
+
+            if (modal.isConfirmed) {
+                this.loading = true;
+                this.$inertia.delete(route("client.destroy", id), {
+                    onSuccess() {
+                        // _this.loading = false;
+                        _this.$swal("Data Success Deleted");
+                    },
+                });
+            }
         },
 
         convertToFormat(code = "") {
@@ -288,7 +297,6 @@ export default {
 
         search(event = false) {
             this.showData = [];
-            console.log(event);
 
             this.searchValue = event ? event.target.value : this.searchValue;
             let search = this.searchValue;

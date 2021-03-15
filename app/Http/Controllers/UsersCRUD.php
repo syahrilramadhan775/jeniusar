@@ -49,8 +49,9 @@ class UsersCRUD extends Controller
             'name' => 'required',
             'username' => 'required|unique:users',
             'email' => 'required|unique:users|email',
-            'license' => 'required|min:12|max:12'
+            'license' => 'required|min:12|max:12',
         ]);
+
         $license = Licence::where('licence', $input['license']);
         $hasLicense = $license->exists();
 

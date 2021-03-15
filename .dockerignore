@@ -1,0 +1,5 @@
+./vendor/
+./.env
+./.env.example
+./start-odoo.bat
+./node_modules/

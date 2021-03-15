@@ -27,6 +27,11 @@ Route::get('/', function () {
 });
 
 
+Route::get('send/success', function () {
+    return Inertia::render('SuccessRegister');
+});
+
+
 Route::middleware(['static.authenticate'])->group(function () {
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
