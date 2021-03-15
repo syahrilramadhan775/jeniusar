@@ -24,6 +24,6 @@ class EmailVerifyController extends Controller
             event(new Verified($user));
         }
 
-        return redirect(env('FRONT_URL') . '/profile/change');
+        return redirect(env('FRONT_URL') . '/success/verify');
     }
 }
