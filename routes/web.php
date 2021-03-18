@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\PasswordResetLinkController;
+use App\Actions\Fortify\NewPasswordController;
 use App\Http\Controllers\Fortify\LoginController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,10 @@ Route::get('/', function () {
 Route::get('success/verify', function () {
     return Inertia::render('SuccessVerify');
 })->name('success.verify');
+
+Route::get('success/forget-password', function () {
+    return Inertia::render('SuccessForgetPassword');
+})->name('success.forget');
 
 
 Route::middleware(['static.authenticate'])->group(function () {

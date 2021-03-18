@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -64,7 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail
     |--------------------------------------------------------------------------
     */
 
-
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id', 'id');
@@ -87,6 +87,23 @@ class User extends Authenticatable implements MustVerifyEmail
     |--------------------------------------------------------------------------
     */
 
+    public static function userDataSave($request)
+    {
+        // TODO : Save User Data.
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
+        // TODO : Save User Data With Relationship Profile.
+        $user->profile()->create([
+            'name' => $request->name
+        ]);
+
+        // TODO : Return User Value.
+        return $user;
+    }
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

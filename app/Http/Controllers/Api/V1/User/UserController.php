@@ -7,7 +7,6 @@ use App\Http\Resources\API\V1\User\ProfileResource;
 use App\Http\Resources\API\V1\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {

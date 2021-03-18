@@ -8,130 +8,108 @@ use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
 use App\Http\Resources\API\V1\User\UserRegistrationResource;
 use App\Models\Licence;
-use App\Models\Profile;
 use App\Models\User;
-use App\Notifications\VerifikasiEmail;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
-use Inertia\Inertia;
-use PhpParser\Node\Expr\FuncCall;
 
 class AuthUserController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     //* Object Register (OK).
     public function registration(Request $request)
     {
-        $valid = new ValidAuthController();
-
-        //? If No Error Data.
-        if (!$valid->Register($request)) {
-            //? Save Data.
-            $user = User::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password)
-            ]);
-            Profile::create([
-                'user_id' => $user->id,
-                'name' => $request->name
-            ]);
-
-            $user->sendEmailVerificationNotification();
-
-            return new UserRegistrationResource($user);
-        } else {
-            return $valid->Register($request);
-        }
-    }
-
-    //* Object Login By Username Or Email (OK).
-    public function login(Request $request)
-    {
-        //? Initialitation Object Valid.
-        $valid = new ValidAuthController();
-
-        $usermail = $request->usermail;
-
-        if (!$valid->Login($request)) {
-            //? Filter By Username Or Email.
-            $user = User::where('username', $usermail)->orWhere(function ($query) use ($usermail) {
-                $query->where('email', $usermail);
-            })->first();
-
-            //? Check Auth If Exist Data User.
-            if (
-                Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
-                Auth::attempt(['email' => $usermail, 'password' => $request->password])
-            ) {
-                if (Auth::user()->email_verified_at == null) {
-                    return [
-                        'status' => false,
-                        'message' => "Anda Belum Verifikasi Email, Silahkan Verifikasi Email Anda."
-                    ];
-                } else {
-                    return new LoginResource($user);
-                }
-            } else {
-                return new LoginExceptionResource($this);
-            }
-        } else {
-            return $valid->Login($request);
-        }
-    }
-
-    //* Object Logout (OK).
-    public function logout()
-    {
-        //? Get Data User By Auth.
-        $user = Auth::user();
-
-        //? If Exist Data User.
-        if (!is_null($user)) {
-            $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
-            return new LogoutResource($this);
-        } else {
-            return ["status" => false, "message" => "Gagal Logout"];
-        }
+        // TODO : If Success Validation Or Not Exist Error.
+        return ValidAuthController::Register($request) ?
+            ValidAuthController::Register($request) : $this->userData($request);
     }
 
     //* Object qrRegistration (OK).
     public function qrRegistration(Request $request)
     {
-        $valid = new ValidAuthController();
+        // TODO : If Success Validation Or Not Exist Error.
+        return ValidAuthController::qrRegister($request) ?
+            ValidAuthController::qrRegister($request) : $this->userDataQr($request);
+    }
 
-        //? If No Error Data.
-        if (!$valid->qrRegister($request)) {
-            //? Get A Licence.
-            $Licence = Licence::where('licence', $request->licence)->first();
+    //* Object Login By Username Or Email (OK).
+    public function login(Request $request)
+    {
+        // TODO : If Success Validation Or Not Exist Error.
+        return ValidAuthController::Login($request) ?
+            ValidAuthController::Login($request) : $this->userDataLogin($request);
+    }
 
-            //? If Licence No Exist
-            if (!$Licence) {
-                return [
-                    'status' => false,
-                    'message' => 'Gagal Registrasi',
-                    'problems' => [
-                        'licence' => "Lisensi Tidak Di Temukan"
-                    ]
-                ];
-            } else {
-                return LicenseController::licence($Licence, $request);
-            }
+    //* Object Logout (OK).
+    public function logout()
+    {
+        // TODO : If Not Null Data User.
+        return Auth::user() ? $this->userDataLogout()
+            : ["status_code" => 403, "message" => "Error Logout"];
+    }
+
+    //? Method Function Store Data User Without Licence.
+    private function userData(Request $request)
+    {
+        // TODO : Save Data User With Profile And Without Licence.
+        $user = User::userDataSave($request);
+
+        // TODO : Send Email Verification Notification.
+        $user->sendEmailVerificationNotification();
+
+        // TODO : Return Success Registration.
+        return new UserRegistrationResource($user);
+    }
+
+    //? Method Function Store Data User With Licence.
+    private function userDataQr(Request $request)
+    {
+        // TODO : Get A Licence.
+        $Licence = Licence::where('licence', $request->licence)->first();
+
+        // TODO : If Licence No Exist ?.
+        return $Licence ? LicenseController::licence($Licence, $request) : [
+            'status' => 404,
+            'message' => 'Error Registration',
+            'problems' => [
+                'licence' => "Licence Not Found"
+            ]
+        ];
+    }
+
+    //? Method Function User Login.
+    private function userDataLogin(Request $request)
+    {
+        $usermail = $request->usermail;
+
+        // TODO : Filter By Username Or Email.
+        $user = User::where('username', $usermail)->orWhere(function ($query) use ($usermail) {
+            $query->where('email', $usermail);
+        })->first();
+
+        // TODO : Check Auth If Exist Data User.
+        if (
+            Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
+            Auth::attempt(['email' => $usermail, 'password' => $request->password])
+        ) {
+            // TODO : Check Auth If User Already Verify Email Or Not ?.
+            return Auth::user()->email_verified_at ? new LoginResource($user) : [
+                'status_code' => 403,
+                'message' => "You have not verified your email"
+            ];
         } else {
-            return $valid->qrRegister($request);
+            return new LoginExceptionResource($this);
         }
     }
 
-    public function display()
+    //? Method Function User Logout.
+    private function userDataLogout()
     {
-        return Inertia::render('User/VerificationSuccess');
+        // TODO : Get Data User By Auth.
+        $user = Auth::user();
+
+        // TODO : Delete CurrentAccessToken.
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+
+        // TODO : Return Resource.
+        return new LogoutResource($this);
     }
 }

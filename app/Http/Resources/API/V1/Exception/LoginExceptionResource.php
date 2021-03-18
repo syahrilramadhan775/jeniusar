@@ -15,7 +15,7 @@ class LoginExceptionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'status' => false,
+            'status_code' => 401,
             'message' => "Unauthorized Data."
         ];
     }

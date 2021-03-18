@@ -13,27 +13,26 @@ use Illuminate\Support\Facades\Hash;
 
 class LicenseController extends Controller
 {
-
+    //* Object Licence (OK).
     public static function licence($Licence, Request $request)
     {
+        // TODO : If Licence Unused Or The Licence Is Not Already Owned.
         if (!$Licence->user_id) {
-            //Save Data.
-            $user = User::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password)
-            ]);
-            Profile::create([
-                'user_id' => $user->id,
-                'name' => $request->name
-            ]);
+            // TODO : Save Data With Profile.
+            $user = User::userDataSave($request);
+
+            // TODO : Find Licence By Id.
             $key = Licence::find($Licence->id);
             $key->user_id = $user->id;
             $key->save();
+
+            // TODO : Send Email Verification Notification To User Email.
             $user->sendEmailVerificationNotification();
 
+            // TODO : Return Success Registration.
             return new QrRegistrationResource($user);
         } else {
+            // TODO : Return Error Registration.
             return new QrRegisterException($request);
         }
     }

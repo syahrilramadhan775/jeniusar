@@ -15,8 +15,8 @@ class QrRegistrationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'status' => true,
-            'message' => 'Berhasil Registrasi',
+            'status_code' => 200,
+            'message' => 'Success Registration',
         ];
     }
 }

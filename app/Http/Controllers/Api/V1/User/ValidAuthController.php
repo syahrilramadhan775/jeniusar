@@ -11,7 +11,7 @@ class ValidAuthController extends Controller
     //* Object Register (OK) */
     public static function Register(Request $request)
     {
-        //? Create Validation
+        // TODO : Create Validation
         $valid = Validator::make($request->all(), [
             "username" => 'required|unique:users',
             "email" => 'required|email|unique:users',
@@ -20,23 +20,50 @@ class ValidAuthController extends Controller
             "name" => 'required',
         ]);
 
-        //? Check Validation
+        // TODO : Check Validation
         if ($valid->fails()) {
-            //? Return Object.
+            // TODO : Return Object.
             return [
-                'status' => false,
+                'status_code' => 401,
                 'problems' => collect($valid->errors())
                     ->map(function ($item) {
                         return join('', $item);
                     })
             ];
         }
+
+        // TODO : Function Custom Validation Di Hold Dulu.
+        // $rules = [
+        //     "username" => 'required|unique:users',
+        //     "email" => 'required|email|unique:users',
+        //     "password" => 'required|min:8',
+        //     "confirm_password" => 'required|same:password',
+        //     "name" => 'required|max:2',
+        // ];
+        // $message = [
+        //     'required' => 'R = (R) Diambil Dari Kata Required, :attribute Di Butuhkan',
+        //     'unique' => 'U = (U) Diambil Dari Kata Unique, :attribute Tidak Boleh Sama',
+        //     'min' => [
+        //         'string' => 'MiS = (M) Diambil Dari Kata Min, (i) Penanda Untuk Dia Itu Sebagai Minimal Dan (S) Di Ambil Dari Kata String :attribute Harus Minimal :min Karakter'
+        //     ],
+        //     'max' => [
+        //         'string' => 'MaS = (M) Diambil Dari Kata Max, (a) Penanda Untuk Dia Itu Sebagai Maksimal Dan (S) Di Ambil Dari Kata String :attribute Harus Minimal :max Karakter'
+        //     ],
+        // ];
+        // $customAttributes = [
+        //     'username' => 'Nama Pengguna',
+        //     'email' => 'Alamat Email',
+        //     'password' => 'Kata Sandi',
+        //     'confirm_password' => 'Konfirmasi Password',
+        //     'name' => 'Nama'
+        // ];
+        // $valid = Validator::make($request->all(), $rules, $message, $customAttributes);
     }
 
     //* Object QrRegister (OK) */
     public static function qrRegister(Request $request)
     {
-        //? Create Validation
+        // TODO : Create Validation
         $valid = Validator::make($request->all(), [
             "username" => 'required|unique:users',
             "email" => 'required|unique:users',
@@ -46,11 +73,11 @@ class ValidAuthController extends Controller
             "licence" => 'required'
         ]);
 
-        //? Check Validation.
+        // TODO : Check Validation.
         if ($valid->fails()) {
-            //? Return Object.
+            // TODO : Return Object.
             return [
-                'status' => false,
+                'status_code' => 401,
                 'problems' => collect($valid->errors()->getMessages())
                     ->map(function ($item) {
                         return join(',', $item);
@@ -62,17 +89,17 @@ class ValidAuthController extends Controller
     //* Object Login By Username Or Email (OK).
     public static function Login(Request $request)
     {
-        //? Create Validation
+        // TODO : Create Validation
         $valid = Validator::make($request->all(), [
             "usermail" => "required",
             "password" => "required|min:8",
         ]);
 
-        //? Check Validation.
+        // TODO : Check Validation.
         if ($valid->fails()) {
-            //? Return Object.
+            // TODO : Return Object.
             return response([
-                'status' => false,
+                'status_code' => 401,
                 'problems' => collect($valid->errors()->getMessages())
                     ->map(function ($item) {
                         return join(',', $item);
@@ -84,6 +111,7 @@ class ValidAuthController extends Controller
     //* Object changePassword (OK) */
     public static function changePassword(Request $request)
     {
+        // TODO : Create Validation
         $valid = Validator::make($request->all(), [
             "current_password" => 'required',
             "new_password" => 'required',
@@ -91,10 +119,10 @@ class ValidAuthController extends Controller
             "id" => 'required|integer',
         ]);
 
-        //? Check If Not Exist Data.
+        // TODO : Check If Not Exist Data.
         if ($valid->fails()) {
             return response([
-                'status' => false,
+                'status_code' => 401,
                 'problems' => collect($valid->errors()->getMessages())
                     ->map(function ($item) {
                         return join(',', $item);

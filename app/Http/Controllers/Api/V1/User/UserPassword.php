@@ -20,8 +20,10 @@ class UserPassword extends Controller
     public function changePassword(Request $request)
     {
         $valid = new ValidAuthController();
-        // test1234567
+
+        // TODO : If Success Validation || Not Exist Error.
         if (!$valid->changePassword($request)) {
+            // TODO : If Request Current Password Not Same From Current Password
             if (Hash::check($request->current_password, Auth::user()->password) == false) {
                 return [
                     "status" => false,
