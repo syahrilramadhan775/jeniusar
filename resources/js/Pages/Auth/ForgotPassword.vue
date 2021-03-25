@@ -18,7 +18,7 @@
 
     <form @submit.prevent="submit">
       <div>
-        <jet-label for="email" value="Username" />
+        <jet-label for="email" value="Nama Pengguna" />
         <jet-input
           id="email"
           type="text"
@@ -34,7 +34,7 @@
           :class="{ 'opacity-25': form.processing }"
           :disabled="form.processing"
         >
-          Username Password Reset Link
+          Membuat Ulang Kata Sandi
         </jet-button>
       </div>
     </form>

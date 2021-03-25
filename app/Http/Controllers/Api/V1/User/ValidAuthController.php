@@ -31,33 +31,6 @@ class ValidAuthController extends Controller
                     })
             ];
         }
-
-        // TODO : Function Custom Validation Di Hold Dulu.
-        // $rules = [
-        //     "username" => 'required|unique:users',
-        //     "email" => 'required|email|unique:users',
-        //     "password" => 'required|min:8',
-        //     "confirm_password" => 'required|same:password',
-        //     "name" => 'required|max:2',
-        // ];
-        // $message = [
-        //     'required' => 'R = (R) Diambil Dari Kata Required, :attribute Di Butuhkan',
-        //     'unique' => 'U = (U) Diambil Dari Kata Unique, :attribute Tidak Boleh Sama',
-        //     'min' => [
-        //         'string' => 'MiS = (M) Diambil Dari Kata Min, (i) Penanda Untuk Dia Itu Sebagai Minimal Dan (S) Di Ambil Dari Kata String :attribute Harus Minimal :min Karakter'
-        //     ],
-        //     'max' => [
-        //         'string' => 'MaS = (M) Diambil Dari Kata Max, (a) Penanda Untuk Dia Itu Sebagai Maksimal Dan (S) Di Ambil Dari Kata String :attribute Harus Minimal :max Karakter'
-        //     ],
-        // ];
-        // $customAttributes = [
-        //     'username' => 'Nama Pengguna',
-        //     'email' => 'Alamat Email',
-        //     'password' => 'Kata Sandi',
-        //     'confirm_password' => 'Konfirmasi Password',
-        //     'name' => 'Nama'
-        // ];
-        // $valid = Validator::make($request->all(), $rules, $message, $customAttributes);
     }
 
     //* Object QrRegister (OK) */

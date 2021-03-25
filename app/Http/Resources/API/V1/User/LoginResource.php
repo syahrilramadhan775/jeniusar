@@ -16,7 +16,7 @@ class LoginResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'status' => true,
+            'status_code' => 200,
             'token' => Auth::user()->createToken('Unity')->plainTextToken,
             'data' => new UserDataResource($this)
         ];

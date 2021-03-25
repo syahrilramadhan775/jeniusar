@@ -17,10 +17,7 @@ class EmailVerifyController extends Controller
 
         // TODO : If User Already Verify Event Create || User Has Verified Email.
         if ($user->hasVerifiedEmail()) {
-            return [
-                'status' => true,
-                'message' => "Email Sudah Verifikasi"
-            ];
+            return redirect(env('FRONT_URL') . '/success/already-verify');
         }
 
         // TODO : If User Null || User Has Not Verified Email.

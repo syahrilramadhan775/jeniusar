@@ -48,5 +48,5 @@ Route::prefix('v1')->group(function () {
 });
 
 Route::prefix('v2')->group(function () {
-    //DO SOMETHING
+    //* DO SOMETHING.
 });

@@ -36,6 +36,10 @@ Route::get('success/forget-password', function () {
     return Inertia::render('SuccessForgetPassword');
 })->name('success.forget');
 
+Route::get('success/already-verify', function () {
+    return Inertia::render('AlreadyRegister');
+})->name('success.already');
+
 
 Route::middleware(['static.authenticate'])->group(function () {
 

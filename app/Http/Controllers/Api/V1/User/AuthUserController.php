@@ -90,6 +90,9 @@ class AuthUserController extends Controller
             Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
             Auth::attempt(['email' => $usermail, 'password' => $request->password])
         ) {
+            // TODO : Delete Tokens by User Login.
+            // Auth::user()->tokens()->delete();
+
             // TODO : Check Auth If User Already Verify Email Or Not ?.
             return Auth::user()->email_verified_at ? new LoginResource($user) : [
                 'status_code' => 403,
