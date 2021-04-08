@@ -66,7 +66,7 @@ class AuthUserController extends Controller
 
         // TODO : If Licence No Exist ?.
         return $Licence ? LicenseController::licence($Licence, $request) : [
-            'status' => 404,
+            'status_code' => 404,
             'message' => 'Error Registration',
             'problems' => [
                 'licence' => "Licence Not Found"

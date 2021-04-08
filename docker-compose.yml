@@ -1,4 +1,4 @@
-version: "3.0"
+version: '3.0'
 
 services:
   jenius.ar:
@@ -7,26 +7,26 @@ services:
       context: ./
     image: jenius-ar-backend
     ports:
-      - "3001:8000"
+      - '3001:8000'
     networks:
       - jenius
     volumes:
-      - ".:/var/www"
+      - '.:/var/www'
     depends_on:
       - mariadb
 
   mariadb:
-    image: "mariadb"
+    image: 'mariadb'
     networks:
       - jenius
     volumes:
-      - "./docker/sql:/docker-entrypoint-initdb.d"
+      - './docker/sql:/docker-entrypoint-initdb.d'
     environment:
-      MYSQL_ROOT_PASSWORD: "eaudeparfum"
-      MYSQL_DATABASE: "jeniusar"
-      MYSQL_USER: "jenius"
-      MYSQL_PASSWORD: "j3n!us909"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: 'eaudeparfum'
+      MYSQL_DATABASE: 'jeniusar.sql'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'j3n!us909'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
 networks:
   jenius:

@@ -15,7 +15,7 @@ class QrRegisterException extends JsonResource
     public function toArray($request)
     {
         return [
-            'status' => 401,
+            'status_code' => 401,
             'problems' => [
                 'licence' => 'The Licence Already Exists'
             ]
