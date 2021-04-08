@@ -25,21 +25,11 @@ class UserPassword extends Controller
         if (!$valid->changePassword($request)) {
             // TODO : If Request Current Password Not Same From Current Password
             if (Hash::check($request->current_password, Auth::user()->password) == false) {
-                return [
-                    "status" => false,
-                    "problems" => [
-                        "password" => "Gagal Mengganti Kata Sandi"
-                    ]
-                ];
+                return ["status" => false, "problems" => ["password" => "Gagal Mengganti Kata Sandi"]];
             } else {
                 $pass = Hash::make($request->new_password);
-                User::where('id', $request->id)->update([
-                    "password" => $pass
-                ]);
-                return [
-                    "status" => true,
-                    "message" => "Berhasil Mengganti Kata Sandi"
-                ];
+                User::where('id', $request->id)->update(["password" => $pass]);
+                return ["status" => true, "message" => "Berhasil Mengganti Kata Sandi"];
             }
         } else {
             return $valid->changePassword($request);

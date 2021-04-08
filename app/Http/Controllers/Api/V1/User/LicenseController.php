@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\API\V1\Exception\QrRegisterException;
 use App\Http\Resources\API\V1\User\QrRegistrationResource;
 use App\Models\Licence;
-use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class LicenseController extends Controller
 {

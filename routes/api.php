@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::prefix('v1')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
@@ -29,21 +29,22 @@ Route::prefix('v1')->group(function () {
     Route::post("qrregister", [AuthUserController::class, 'qrRegistration']);
     Route::post("login", [AuthUserController::class, 'login']);
 
-    // Verify email
+    // TODO : Route Verify email
     Route::get('/email/verify/{id}/{hash}', [EmailVerifyController::class, '__invoke'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    // Resend link to verify email
+    // TODO : Route Resend link to verify email
     Route::post('/email/verify/resend', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
     })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
-    // sanctum auth middleware routes
+    // TODO : Protection Sanctum Auth middleware routes
     Route::middleware('auth:api')->group(function () {
         Route::get("user/{id}", [UserController::class, 'show']);
         Route::get("logout", [AuthUserController::class, 'logout']);
         Route::post("changepass", [UserPassword::class, 'changePassword']);
+        Route::get("tokens", [UserController::class, 'tokens']);
     });
 });
 

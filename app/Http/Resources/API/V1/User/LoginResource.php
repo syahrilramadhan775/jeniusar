@@ -3,7 +3,6 @@
 namespace App\Http\Resources\API\V1\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class LoginResource extends JsonResource
 {
@@ -17,7 +16,7 @@ class LoginResource extends JsonResource
     {
         return [
             'status_code' => 200,
-            'token' => Auth::user()->createToken('Unity')->plainTextToken,
+            'token' => $request->user()->createToken('Unity')->plainTextToken,
             'data' => new UserDataResource($this)
         ];
     }

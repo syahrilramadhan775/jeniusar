@@ -10,65 +10,30 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //* Object Get All Users. (OK).
     public function index()
     {
-        $user = User::all();
-
-        return UserResource::collection($user);
+        // TODO : Get Data Collection Users.
+        return UserResource::collection(User::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    //* Object Tokens. (OK).
+    public function tokens(Request $request)
     {
-        //
+        // TODO : Get And Request BearerToken From Header.
+        $tokens = $request->bearerToken();
+
+        // TODO : Check CurrentToken.
+        return $request->user()->currentAccessToken() ? [
+            'status_code' => 200,
+            'tokens' => $tokens
+        ] : http_response_code(500);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //* Object Get Single Data By Id Users. (OK).
     public function show($id)
     {
-        $user = User::find($id);
-        if (!is_null($user)) {
-            return new ProfileResource($user);
-        } else {
-            return ["status" => false, "message" => "Whoops! no user found"];
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // TODO : Filter Data By Id And Return ProfileResource Data If User Data This Found.
+        return User::find($id) ? new ProfileResource(User::find($id)) : ["status" => false, "message" => "Whoops! no user found"];
     }
 }

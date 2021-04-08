@@ -90,8 +90,8 @@ class AuthUserController extends Controller
             Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
             Auth::attempt(['email' => $usermail, 'password' => $request->password])
         ) {
-            // TODO : Delete Tokens by User Login.
-            // Auth::user()->tokens()->delete();
+            // TODO : Revoke Tokens by User Login.
+            $user->tokens()->delete();
 
             // TODO : Check Auth If User Already Verify Email Or Not ?.
             return Auth::user()->email_verified_at ? new LoginResource($user) : [
@@ -104,15 +104,15 @@ class AuthUserController extends Controller
     }
 
     //? Method Function User Logout.
-    private function userDataLogout()
-    {
-        // TODO : Get Data User By Auth.
-        $user = Auth::user();
+    // private function userDataLogout()
+    // {
+    //     // TODO : Get Data User By Auth.
+    //     $user = Auth::user();
 
-        // TODO : Delete CurrentAccessToken.
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+    //     // TODO : Delete CurrentAccessToken.
+    //     $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
 
-        // TODO : Return Resource.
-        return new LogoutResource($this);
-    }
+    //     // TODO : Return Resource.
+    //     return new LogoutResource($this);
+    // }
 }
