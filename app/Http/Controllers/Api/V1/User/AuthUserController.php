@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\API\V1\Exception\LoginExceptionResource;
-use App\Http\Resources\API\V1\User\LogoutResource;
 use App\Http\Resources\API\V1\User\LoginResource;
 use App\Http\Resources\API\V1\User\UserRegistrationResource;
 use App\Models\Licence;
