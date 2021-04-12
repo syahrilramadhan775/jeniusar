@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Apr 2021 pada 05.47
+-- Waktu pembuatan: 12 Apr 2021 pada 03.48
 -- Versi server: 10.4.13-MariaDB
 -- Versi PHP: 7.4.8
 
@@ -793,7 +793,7 @@ INSERT INTO `profile` (`id`, `name`, `user_id`, `created_at`, `updated_at`) VALU
 (75, 'yuli', 75, '2021-03-10 00:02:38', '2021-03-10 00:02:38'),
 (76, 'yunita', 76, '2021-03-10 00:02:38', '2021-03-10 00:02:38'),
 (77, 'zelda', 77, '2021-03-10 00:02:38', '2021-03-10 00:02:38'),
-(79, 'Programmer Falah Inovasi Teknologi', 79, '2021-04-08 03:44:54', '2021-04-08 03:44:54');
+(79, 'GII', 79, '2021-04-08 03:44:54', '2021-04-08 03:44:54');
 
 -- --------------------------------------------------------
 
@@ -827,7 +827,7 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email_verified_at` timestamp NULL DEFAULT current_timestamp(),
+  `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `two_factor_secret` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `two_factor_recovery_codes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -920,7 +920,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `email_verified_at`, `password`,
 (75, 'yuli', 'astuty9@gmail.com', '2021-03-09 23:45:54', '$2y$10$kamfjuvndkaiwkfjrntooe7CJ5Oyi861dcOtdv8heiE0H1eBNqFQi', NULL, NULL, NULL, NULL, NULL, '2021-03-09 23:45:54', '2021-03-09 23:45:54'),
 (76, 'yunita', 'yunitaariani85@gmail.com', '2021-03-09 23:45:54', '$2y$10$kamfjuvndkaiwkfjrntooe/K.P726pNVAzVJbiFxJurTu/kX/dLwG', NULL, NULL, NULL, NULL, NULL, '2021-03-09 23:45:54', '2021-03-09 23:45:54'),
 (77, 'zelda', 'zelda.gumilar@gmail.com', '2021-03-09 23:45:54', '$2y$10$kamfjuvndkaiwkfjrntooeikKY22GWAX51Rie1AUbDCTbHvNUiQpm', NULL, NULL, NULL, NULL, NULL, '2021-03-09 23:45:54', '2021-03-09 23:45:54'),
-(79, 'programmerfalah', 'programmer.falah@gmail.com', '2021-04-08 03:44:54', '$2y$10$qmifbnhuw98yubNoN7mdruH8RpyAAlFmFcN1xRZpQT99nbYkIVPCq', NULL, NULL, NULL, NULL, NULL, '2021-04-08 03:44:54', '2021-04-08 03:44:54');
+(79, 'gii', 'programmer.falah@gmail.com', '2021-04-08 03:44:54', '$2y$10$Mr1kv/JydPIr1f4MzYGXGuIdQ9c3hCpjS9pbB/rLjVFauZBXjphmG', NULL, NULL, NULL, NULL, NULL, '2021-04-08 03:44:54', '2021-04-09 10:11:01');
 
 --
 -- Indexes for dumped tables

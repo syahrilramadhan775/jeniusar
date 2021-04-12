@@ -41,8 +41,10 @@ class AuthUserController extends Controller
     public function logout()
     {
         // TODO : If Not Null Data User.
-        return Auth::user() ? $this->userDataLogout()
-            : ["status_code" => 403, "message" => "Error Logout"];
+        return Auth::user() ? $this->userDataLogout() : [
+            "status_code" => 403, 
+            "message"     => "Error Logout"
+        ];
     }
 
     //? Method Function Store Data User Without Licence.
@@ -66,36 +68,32 @@ class AuthUserController extends Controller
 
         // TODO : If Licence No Exist ?.
         return $Licence ? LicenseController::licence($Licence, $request) : [
-            'status_code' => 404,
-            'message' => 'Error Registration',
-            'problems' => [
-                'licence' => "Licence Not Found"
-            ]
+            'status_code'   => 404,
+            'message'       => 'Error Registration',
+            'problems'      => ['licence' => "Licence Not Found"]
         ];
     }
 
     //? Method Function User Login.
     private function userDataLogin(Request $request)
     {
-        $usermail = $request->usermail;
-
         // TODO : Filter By Username Or Email.
-        $user = User::where('username', $usermail)->orWhere(function ($query) use ($usermail) {
-            $query->where('email', $usermail);
+        $user = User::where('username', $request->usermail)->orWhere(function ($query) use ($request) {
+            $query->where('email', $request->usermail);
         })->first();
 
         // TODO : Check Auth If Exist Data User.
         if (
-            Auth::attempt(['username' => $usermail, 'password' => $request->password]) ||
-            Auth::attempt(['email' => $usermail, 'password' => $request->password])
+            Auth::attempt(['username' => $request->usermail, 'password' => $request->password]) ||
+            Auth::attempt(['email'    => $request->usermail, 'password' => $request->password])
         ) {
             // TODO : Revoke Tokens by User Login.
             $user->tokens()->delete();
 
             // TODO : Check Auth If User Already Verify Email Or Not ?.
-            return Auth::user()->email_verified_at ? new LoginResource($user) : [
-                'status_code' => 403,
-                'message' => "You have not verified your email"
+            return $user->email_verified_at ? new LoginResource($user) : [
+                'status_code'  => 403,
+                'message'      => "You have not verified your email",
             ];
         } else {
             return new LoginExceptionResource($this);

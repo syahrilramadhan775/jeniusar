@@ -13,24 +13,15 @@ class ValidAuthController extends Controller
     {
         // TODO : Create Validation
         $valid = Validator::make($request->all(), [
-            "username" => 'required|unique:users',
-            "email" => 'required|email|unique:users',
-            "password" => 'required|min:8',
-            "confirm_password" => 'required|same:password',
-            "name" => 'required',
+            'username'         => 'required|unique:users',
+            'email'            => 'required|email|unique:users',
+            'password'         => 'required|min:8',
+            'confirm_password' => 'required|same:password',
+            'name'             => 'required',
         ]);
 
-        // TODO : Check Validation
-        if ($valid->fails()) {
-            // TODO : Return Object.
-            return [
-                'status_code' => 401,
-                'problems' => collect($valid->errors())
-                    ->map(function ($item) {
-                        return join('', $item);
-                    })
-            ];
-        }
+        // TODO : Call Object returnValidation().
+        return self::returnValidation($valid);
     }
 
     //* Object QrRegister (OK) */
@@ -38,25 +29,16 @@ class ValidAuthController extends Controller
     {
         // TODO : Create Validation
         $valid = Validator::make($request->all(), [
-            "username" => 'required|unique:users',
-            "email" => 'required|email|unique:users',
-            "password" => 'required|min:8',
-            "confirm_password" => 'required|same:password',
-            "name" => 'required',
-            "licence" => 'required'
+            'username'         => 'required|unique:users',
+            'email'            => 'required|email|unique:users',
+            'password'         => 'required|min:8',
+            'confirm_password' => 'required|same:password',
+            'name'             => 'required',
+            'licence'          => 'required',
         ]);
 
-        // TODO : Check Validation.
-        if ($valid->fails()) {
-            // TODO : Return Object.
-            return [
-                'status_code' => 401,
-                'problems' => collect($valid->errors()->getMessages())
-                    ->map(function ($item) {
-                        return join(',', $item);
-                    })
-            ];
-        }
+        // TODO : Call Object returnValidation().
+        return self::returnValidation($valid);
     }
 
     //* Object Login By Username Or Email (OK).
@@ -64,21 +46,12 @@ class ValidAuthController extends Controller
     {
         // TODO : Create Validation
         $valid = Validator::make($request->all(), [
-            "usermail" => "required",
-            "password" => "required|min:8",
+            'usermail'         => 'required',
+            'password'         => 'required|min:8',
         ]);
 
-        // TODO : Check Validation.
-        if ($valid->fails()) {
-            // TODO : Return Object.
-            return response([
-                'status_code' => 401,
-                'problems' => collect($valid->errors()->getMessages())
-                    ->map(function ($item) {
-                        return join(',', $item);
-                    })
-            ]);
-        }
+        // TODO : Call Object returnValidation().
+        return self::returnValidation($valid);
     }
 
     //* Object changePassword (OK) */
@@ -86,21 +59,28 @@ class ValidAuthController extends Controller
     {
         // TODO : Create Validation
         $valid = Validator::make($request->all(), [
-            "current_password" => 'required',
-            "new_password" => 'required',
-            "confirm_password" => 'required|same:new_password',
-            "id" => 'required|integer',
+            'current_password' => 'required',
+            'new_password'     => 'required',
+            'confirm_password' => 'required|same:new_password',
+            'id'               => 'required|integer',
         ]);
 
-        // TODO : Check If Not Exist Data.
+        // TODO : Call Object returnValidation().
+        return self::returnValidation($valid);
+    }
+
+    //? Object Function Validate (OK)
+    private static function returnValidation($valid)
+    {
+        // TODO : Check Validation.
         if ($valid->fails()) {
-            return response([
-                'status_code' => 401,
-                'problems' => collect($valid->errors()->getMessages())
-                    ->map(function ($item) {
-                        return join(',', $item);
-                    })
-            ]);
+        // TODO : Return Object.
+        return [
+            'status_code'      => 401,
+            'problems'         => collect($valid->errors()->getMessages())->map(function ($item) {
+                    return join(',', $item);
+                })
+            ];
         }
     }
 }
